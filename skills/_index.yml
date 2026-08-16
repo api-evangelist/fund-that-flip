@@ -1,0 +1,26 @@
+generated: '2026-08-16'
+method: generated
+source: openapi/fund-that-flip-flipperforce-public-api.yml + conventions/fund-that-flip-conventions.yml
+  + errors/fund-that-flip-problem-types.yml
+note: Packaged agent skills for the FlipperForce Public API. Every operation referenced in every skill
+  is a real operationId verified against the published OpenAPI 3.1.0 document; none were invented. The
+  provider publishes no skills or AGENTS.md of its own.
+skill_count: 4
+skills:
+- name: create-and-track-project
+  file: fund-that-flip-create-and-track-project.md
+  operations: 5
+  summary: Create a rehab/flip project and keep its record current — the root aggregate every other flow
+    depends on.
+- name: record-expenses-and-receipts
+  file: fund-that-flip-record-expenses-and-receipts.md
+  operations: 9
+  summary: Two-step attachment upload, receipt binding, expense transactions and line items for job costing.
+- name: publish-progress-update
+  file: fund-that-flip-publish-progress-update.md
+  operations: 10
+  summary: Dated investor-facing progress updates with photos, plus the EXIF-ordered project photo log.
+- name: audit-workspace-activity
+  file: fund-that-flip-audit-workspace-activity.md
+  operations: 7
+  summary: Filter-discovery-first reads of the workspace activity log, and project income vs expense reconciliation.

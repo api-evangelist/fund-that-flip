@@ -1,0 +1,71 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/fund-that-flip-flipperforce-public-api.yml + live probe of https://tools.flipperforce.com/api/v1/user/account
+format: vendor-json
+note: 'The API does NOT use RFC 9457 application/problem+json. Every error is application/json with a
+  flat {"message": "..."} envelope; 422 adds an "errors" object mapping each failing field to an array
+  of messages. Confirmed live: an unauthenticated GET returned 401 {"message":"Unauthenticated."} and
+  a bogus bearer token returned 401 {"message":"Unauthorized: Invalid Public API key."}.'
+envelope:
+  content_type: application/json
+  fields:
+  - name: message
+    type: string
+    required: true
+    description: Human-readable error overview.
+  - name: errors
+    type: object
+    required: false
+    description: Only on 422. Maps each field that failed validation to an array of message strings.
+trace_header:
+  name: x-app-invocation-id
+  observed: true
+  description: Per-request identifier returned on every response, including errors. Quote it when contacting
+    support@flipperforce.com.
+problem_types:
+- code: 401
+  name: AuthenticationException
+  title: Unauthenticated
+  component: '#/components/responses/AuthenticationException'
+  operations: 50
+  observed_messages:
+  - Unauthenticated.
+  - 'Unauthorized: Invalid Public API key.'
+  remediation: 'Send the Public API key issued from Workspace Settings > Integrations as `Authorization:
+    Bearer <api-key>`. The key is sent verbatim, not base64-encoded.'
+- code: 403
+  name: Forbidden
+  title: Forbidden
+  operations: 48
+  remediation: The authenticated key is valid but the workspace or project is outside its scope, or the
+    plan does not include the feature. Confirm the {workspace} and {projectV1} identifiers belong to the
+    key’s workspace.
+- code: 404
+  name: ModelNotFoundException
+  title: Not found
+  component: '#/components/responses/ModelNotFoundException'
+  operations: 1
+  remediation: The UUID in the path does not resolve. Re-list the parent collection to obtain a current
+    UUID.
+- code: 422
+  name: ValidationException
+  title: Validation error
+  component: '#/components/responses/ValidationException'
+  operations: 27
+  remediation: Read the `errors` object; each key is a request field and each value is an array of the
+    reasons it was rejected. Fix and resubmit.
+- code: 429
+  name: TooManyRequests
+  title: Too Many Requests
+  operations: 0
+  source: info.description Rate Limits section (not declared per-operation in the spec)
+  remediation: 'Documented by the provider: "decrease the amount or frequency of your requests and try
+    again." No Retry-After or RateLimit-* header is documented or observed.'
+response_code_census:
+  '200': 29
+  '401': 50
+  '422': 27
+  '403': 48
+  '201': 11
+  '204': 10
+  '404': 1

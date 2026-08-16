@@ -1,0 +1,78 @@
+generated: '2026-08-16'
+method: derived
+status: candidate
+source: openapi/fund-that-flip-flipperforce-public-api.yml
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: searched
+note: Fund That Flip / Upright ships NO MCP server — not remote, not stdio. Searched the provider docs,
+  blog, help centers, npm (@flipperforce/*, upright), and the public MCP registries; nothing exists. The
+  tools below are a CANDIDATE surface derived from real operationIds in the FlipperForce Public API, offered
+  as a design sketch of what an MCP server over this API would expose. No endpoint URL is asserted because
+  none exists.
+auth_note: Any MCP server over this API would carry a single FlipperForce Public API key as a Bearer token,
+  scoped to one workspace. There are no OAuth scopes to map, so per-tool authorization would have to be
+  enforced by the server itself.
+tool_count: 18
+tools:
+- name: list_projects
+  rest_operation: v1.project.list
+  category: Project
+- name: create_project
+  rest_operation: v1.project.create
+  category: Project
+- name: update_project
+  rest_operation: v1.project.update
+  category: Project
+- name: delete_project
+  rest_operation: v1.project.delete
+  category: Project
+- name: list_project_expense_transactions
+  rest_operation: v1.project.expense-transactions.list
+  category: Expenses
+- name: create_project_expense_transaction
+  rest_operation: v1.project.expense-transactions.create
+  category: Expenses
+- name: list_project_income
+  rest_operation: v1.project.income.list
+  category: Income
+- name: create_project_income
+  rest_operation: v1.project.income.create
+  category: Income
+- name: list_project_photo_log
+  rest_operation: v1.project.photo-log.list
+  category: Photos
+- name: create_project_photo
+  rest_operation: v1.project.photo-log.create
+  category: Photos
+- name: list_project_updates
+  rest_operation: v1.project.updates.list
+  category: Updates
+- name: create_project_update
+  rest_operation: v1.project.updates.create
+  category: Updates
+- name: list_project_receipts
+  rest_operation: v1.project.receipts.list
+  category: Receipts
+- name: list_workspace_companies
+  rest_operation: v1.workspace.companies.list
+  category: Companies
+- name: list_workspace_expense_accounts
+  rest_operation: v1.workspace.expense-accounts.list
+  category: Accounting
+- name: list_workspace_activity_log
+  rest_operation: v1.workspace.activity-log.list
+  category: Activity Log
+- name: get_user_account
+  rest_operation: v1.user.account
+  category: User
+- name: create_upload_intent
+  rest_operation: v1.workspace.upload-intent.create
+  category: Attachments
+pointer_note: No MCPServer pointer is wired in apis.yml. A derived candidate tool list is not an MCP server,
+  and the MCPServer pointer asserts the provider ships one — emitting it would credit Fund That Flip with
+  an agent surface it does not operate.

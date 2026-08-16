@@ -1,0 +1,51 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/fund-that-flip-flipperforce-public-api.yml + live probes + https://flipperforce.com/legal
+note: Assertions about cross-cutting standards. Each entry records what was checked and the evidence,
+  including honest negatives. No compliance certification (SOC 2, ISO 27001, PCI DSS) is published by
+  the provider, so NO Compliance pointer is wired in apis.yml.
+standards:
+- id: openapi
+  conforms: true
+  version: 3.1.0
+  evidence: https://tools.flipperforce.com/docs/api.json parses as OpenAPI 3.1.0 with 37 paths, 50 operations,
+    52 component schemas, declared securitySchemes and a global security requirement.
+- id: rfc9457
+  conforms: false
+  evidence: No application/problem+json anywhere in the spec; all 88 response bodies are application/json
+    with a flat {"message"} envelope.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key or equivalent header; the spec declares zero header parameters.
+- id: pagination
+  conforms: true
+  style: cursor
+  evidence: cursor and per_page query parameters on list operations.
+- id: oauth2
+  conforms: false
+  evidence: Only securityScheme is PublicApiBearerAuth (http/bearer). No oauth2 flows, no scopes, no /.well-known/oauth-authorization-server
+    (404).
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 on all three hosts.
+- id: rfc9116
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 on tools.flipperforce.com, www.flipperforce.com and
+    www.upright.us.
+- id: rfc8594
+  conforms: false
+  evidence: No Sunset or Deprecation headers documented or observed; no deprecation policy published.
+- id: json-schema-2020-12
+  conforms: true
+  evidence: OpenAPI 3.1.0 implies JSON Schema 2020-12 dialect; schemas use nullable union types (["string","null"])
+    rather than the 3.0 nullable keyword.
+- id: iso8601
+  conforms: true
+  evidence: created_at/updated_at documented as ISO 8601 Zulu with microseconds.
+- id: asyncapi
+  conforms: false
+  evidence: No event, webhook or streaming surface published. The OpenAPI document declares no webhooks
+    and the docs describe none.
+certifications: []
+certifications_note: No trust center, compliance page or named certification was found on upright.us,
+  flipperforce.com or the help centers. probe-security-programs.py returned vdp=none trust=none.

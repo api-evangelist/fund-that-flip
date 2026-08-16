@@ -1,0 +1,24 @@
+generated: '2026-08-16'
+method: searched
+source: https://tools.flipperforce.com/docs/api.json (info.description, "Rate Limits" section)
+limit_count: 0
+note: The provider documents that rate limiting EXISTS and that exhaustion returns 429 Too Many Requests,
+  but publishes no number, window, or scope — the guidance is qualitative ("decrease the amount or frequency
+  of your requests and try again"). No RateLimit-*, X-RateLimit-* or Retry-After header is documented
+  in the spec or observed on live responses, so a client cannot see how close it is to the limit or how
+  long to back off. limit_count is 0 because no quantified limit is published, not because the API is
+  unlimited.
+exhaustion:
+  status_code: 429
+  reason_phrase: Too Many Requests
+  body: 'application/json {"message": "..."}'
+response_headers:
+  documented: []
+  observed: []
+  observed_on: live unauthenticated GET https://tools.flipperforce.com/api/v1/user/account (401) and a
+    bogus-bearer GET /api/v1/project/list (401), 2026-08-16
+  note: Neither probe returned any rate-limit header. The only per-request header of note is x-app-invocation-id,
+    a trace identifier.
+limits: []
+recommended_client_behavior: Treat 429 as retryable with client-side exponential backoff and jitter; no
+  server-provided Retry-After is available to honor.

@@ -1,0 +1,436 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/fund-that-flip-flipperforce-public-api.yml
+note: Entity graph derived from components.schemas $ref links and *_uuid reference fields in the FlipperForce
+  Public API. The root aggregate is Workspace; Project hangs off Workspace and nearly every other entity
+  hangs off Project.
+identifiers:
+  style: uuid
+  field: uuid
+  description: Every addressable resource carries a `uuid` public identifier; references to other resources
+    use `<entity>_uuid`. There are no type-prefixed ids.
+timestamps:
+  fields:
+  - created_at
+  - updated_at
+  format: ISO 8601 Zulu with microseconds, e.g. 2025-04-30T21:21:10.123456Z
+  note: Microsecond precision was introduced in v0.0.9 (July 23, 2026); the prior format had second precision.
+roots:
+- Workspace
+- Project
+entity_count: 52
+relationship_count: 37
+entities:
+- name: Activity Log
+  kind: object
+  field_count: 8
+  identifier: uuid
+  reference_fields: null
+- name: Activity Log Actor
+  kind: object
+  field_count: 2
+  identifier: uuid
+  reference_fields: null
+- name: Activity Log Filters
+  kind: object
+  field_count: 3
+  identifier: null
+  reference_fields: null
+- name: Activity Log List
+  kind: array
+  field_count: 0
+- name: Activity Log Project Context
+  kind: object
+  field_count: 2
+  identifier: uuid
+  reference_fields: null
+- name: Activity Log Project Filter
+  kind: object
+  field_count: 2
+  identifier: uuid
+  reference_fields: null
+- name: Activity Log Target
+  kind: object
+  field_count: 4
+  identifier: uuid
+  reference_fields: null
+- name: Activity Log Target Links
+  kind: object
+  field_count: 1
+  identifier: null
+  reference_fields: null
+- name: Activity Log User Filter
+  kind: object
+  field_count: 2
+  identifier: uuid
+  reference_fields: null
+- name: AttachmentUploadIntentType
+  kind: string
+  field_count: 0
+- name: Company
+  kind: object
+  field_count: 24
+  identifier: uuid
+  reference_fields: null
+- name: Company Category
+  kind: object
+  field_count: 4
+  identifier: uuid
+  reference_fields: null
+- name: Create Expense Account Request
+  kind: object
+  field_count: 1
+  identifier: null
+  reference_fields: null
+- name: Create Expense Transaction Request
+  kind: object
+  field_count: 8
+  identifier: null
+  reference_fields:
+  - receipt_uuid
+  - company_uuid
+  - expense_account_uuid
+  - expense_category_uuid
+- name: Create Income Request
+  kind: object
+  field_count: 4
+  identifier: null
+  reference_fields: null
+- name: Expense Account
+  kind: object
+  field_count: 4
+  identifier: uuid
+  reference_fields: null
+- name: Expense Category
+  kind: object
+  field_count: 4
+  identifier: uuid
+  reference_fields: null
+- name: Expense Line Item
+  kind: object
+  field_count: 14
+  identifier: uuid
+  reference_fields:
+  - transaction_uuid
+- name: Expense Line Item Delete Tombstone
+  kind: object
+  field_count: 3
+  identifier: null
+  reference_fields:
+  - deleted_transaction_uuid
+  - deleted_expense_uuid
+- name: Expense Line Item List
+  kind: object
+  field_count: 2
+  identifier: null
+  reference_fields: null
+- name: Expense Transaction
+  kind: object
+  field_count: 9
+  identifier: uuid
+  reference_fields:
+  - receipt_uuid
+- name: Expense Transaction List
+  kind: array
+  field_count: 0
+- name: File
+  kind: object
+  field_count: 6
+  identifier: uuid
+  reference_fields: null
+- name: Income
+  kind: object
+  field_count: 7
+  identifier: uuid
+  reference_fields: null
+- name: Income List
+  kind: object
+  field_count: 2
+  identifier: null
+  reference_fields: null
+- name: Project
+  kind: object
+  field_count: 24
+  identifier: uuid
+  reference_fields:
+  - workspace_uuid
+- name: Project Photo Log
+  kind: object
+  field_count: 1
+  identifier: null
+  reference_fields: null
+- name: 'Project Photo Log: Date Group'
+  kind: object
+  field_count: 2
+  identifier: null
+  reference_fields: null
+- name: 'Project Photo Log: Photo'
+  kind: object
+  field_count: 6
+  identifier: uuid
+  reference_fields: null
+- name: Project Update
+  kind: object
+  field_count: 8
+  identifier: uuid
+  reference_fields: null
+- name: 'Project Update: Photo'
+  kind: object
+  field_count: 3
+  identifier: uuid
+  reference_fields: null
+- name: ProjectPipelineStage
+  kind: string
+  field_count: 0
+- name: ProjectStrategy
+  kind: string
+  field_count: 0
+- name: Receipt
+  kind: object
+  field_count: 6
+  identifier: uuid
+  reference_fields: null
+- name: Update Expense Account Request
+  kind: object
+  field_count: 1
+  identifier: null
+  reference_fields: null
+- name: Update Expense Line Item Request
+  kind: object
+  field_count: 9
+  identifier: null
+  reference_fields:
+  - expense_account_uuid
+  - company_uuid
+  - expense_category_uuid
+- name: Update Expense Transaction Request
+  kind: object
+  field_count: 3
+  identifier: null
+  reference_fields:
+  - receipt_uuid
+- name: Update Income Request
+  kind: object
+  field_count: 4
+  identifier: null
+  reference_fields: null
+- name: Upload Intent
+  kind: object
+  field_count: 5
+  identifier: uuid
+  reference_fields: null
+- name: User
+  kind: object
+  field_count: 5
+  identifier: uuid
+  reference_fields: null
+- name: User Account
+  kind: object
+  field_count: 2
+  identifier: null
+  reference_fields: null
+- name: V1CompanyCategoryCreateRequest
+  kind: object
+  field_count: 1
+  identifier: null
+  reference_fields: null
+- name: V1CompanyCategoryUpdateRequest
+  kind: object
+  field_count: 1
+  identifier: null
+  reference_fields: null
+- name: V1CompanyCreateRequest
+  kind: object
+  field_count: 21
+  identifier: null
+  reference_fields: null
+- name: V1CompanyUpdateRequest
+  kind: object
+  field_count: 21
+  identifier: null
+  reference_fields: null
+- name: V1DocumentsReceiptCreateRequest
+  kind: object
+  field_count: 4
+  identifier: null
+  reference_fields:
+  - intent_uuid
+- name: V1DocumentsReceiptUpdateRequest
+  kind: object
+  field_count: 3
+  identifier: null
+  reference_fields: null
+- name: V1PhotoLogUpdateRequest
+  kind: object
+  field_count: 2
+  identifier: null
+  reference_fields: null
+- name: V1ProjectCreateRequest
+  kind: object
+  field_count: 13
+  identifier: null
+  reference_fields: null
+- name: V1ProjectProgressUpdateRequest
+  kind: object
+  field_count: 3
+  identifier: null
+  reference_fields: null
+- name: V1ProjectUpdateRequest
+  kind: object
+  field_count: 21
+  identifier: null
+  reference_fields: null
+- name: Workspace
+  kind: object
+  field_count: 6
+  identifier: uuid
+  reference_fields: null
+relationships:
+- from: Create Expense Transaction Request
+  to: Receipt
+  type: belongs_to
+  via: receipt_uuid
+- from: Create Expense Transaction Request
+  to: Company
+  type: belongs_to
+  via: company_uuid
+- from: Create Expense Transaction Request
+  to: Expense Account
+  type: belongs_to
+  via: expense_account_uuid
+- from: Create Expense Transaction Request
+  to: Expense Category
+  type: belongs_to
+  via: expense_category_uuid
+- from: Expense Line Item
+  to: Transaction
+  type: belongs_to
+  via: transaction_uuid
+- from: Expense Line Item Delete Tombstone
+  to: Deleted Transaction
+  type: belongs_to
+  via: deleted_transaction_uuid
+- from: Expense Line Item Delete Tombstone
+  to: Deleted Expense
+  type: belongs_to
+  via: deleted_expense_uuid
+- from: Expense Transaction
+  to: Receipt
+  type: belongs_to
+  via: receipt_uuid
+- from: Project
+  to: Workspace
+  type: belongs_to
+  via: workspace_uuid
+- from: Update Expense Line Item Request
+  to: Expense Account
+  type: belongs_to
+  via: expense_account_uuid
+- from: Update Expense Line Item Request
+  to: Company
+  type: belongs_to
+  via: company_uuid
+- from: Update Expense Line Item Request
+  to: Expense Category
+  type: belongs_to
+  via: expense_category_uuid
+- from: Update Expense Transaction Request
+  to: Receipt
+  type: belongs_to
+  via: receipt_uuid
+- from: V1DocumentsReceiptCreateRequest
+  to: Intent
+  type: belongs_to
+  via: intent_uuid
+- from: Activity Log
+  to: Activity Log Actor
+  type: has_one
+  via: performed_by
+- from: Activity Log
+  to: Activity Log Project Context
+  type: has_one
+  via: project
+- from: Activity Log
+  to: Activity Log Target
+  type: has_many
+  via: targets
+- from: Activity Log Filters
+  to: Activity Log Project Filter
+  type: has_many
+  via: projects
+- from: Activity Log Filters
+  to: Activity Log User Filter
+  type: has_many
+  via: users
+- from: Activity Log Target
+  to: Activity Log Target Links
+  type: has_one
+  via: links
+- from: Expense Line Item List
+  to: Expense Line Item
+  type: has_many
+  via: expenses
+- from: Expense Transaction
+  to: Expense Line Item
+  type: has_many
+  via: expenses
+- from: Income List
+  to: Income
+  type: has_many
+  via: income
+- from: Project Photo Log
+  to: 'Project Photo Log: Date Group'
+  type: has_many
+  via: photos_by_date
+- from: 'Project Photo Log: Date Group'
+  to: 'Project Photo Log: Photo'
+  type: has_many
+  via: photos
+- from: 'Project Photo Log: Photo'
+  to: File
+  type: has_one
+  via: photo
+- from: Project Update
+  to: User
+  type: has_one
+  via: author
+- from: Project Update
+  to: 'Project Update: Photo'
+  type: has_many
+  via: photos
+- from: 'Project Update: Photo'
+  to: File
+  type: has_one
+  via: photo
+- from: Receipt
+  to: File
+  type: has_one
+  via: file
+- from: User Account
+  to: User
+  type: has_one
+  via: user
+- from: User Account
+  to: Workspace
+  type: has_many
+  via: workspaces
+- from: V1ProjectCreateRequest
+  to: ProjectStrategy
+  type: has_one
+  via: investment_strategy
+- from: V1ProjectCreateRequest
+  to: ProjectPipelineStage
+  type: has_one
+  via: stage
+- from: V1ProjectUpdateRequest
+  to: ProjectStrategy
+  type: has_one
+  via: investment_strategy
+- from: V1ProjectUpdateRequest
+  to: ProjectPipelineStage
+  type: has_one
+  via: stage
+- from: Workspace
+  to: User
+  type: has_one
+  via: owner

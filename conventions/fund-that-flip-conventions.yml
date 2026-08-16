@@ -1,0 +1,110 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/fund-that-flip-flipperforce-public-api.yml + https://tools.flipperforce.com/docs/api +
+  live probes 2026-08-16
+authentication:
+  style: http bearer
+  header: 'Authorization: Bearer <api-key>'
+  scheme: PublicApiBearerAuth
+  applied: globally — the spec declares a top-level security requirement, and all 50 operations return
+    401 and 403
+  issuance: By request only. A workspace owner requests a Public API key at https://tools.flipperforce.com/integrations
+    (Workspace Settings > Integrations).
+  note: The key is sent verbatim, not base64-encoded. There is no OAuth, no scopes, and no refresh flow.
+  see: authentication/fund-that-flip-authentication.yml
+idempotency:
+  supported: false
+  note: No idempotency mechanism is published. The spec declares no header parameters at all, and neither
+    the OpenAPI document nor the docs mention an Idempotency-Key or any request-deduplication token. Retrying
+    a POST (for example v1.project.expense-transactions.create) will create a duplicate. This is why NO
+    Idempotency pointer is wired in apis.yml.
+  header: null
+  scope: null
+  retention: null
+pagination:
+  style: cursor
+  params:
+  - name: cursor
+    in: query
+    description: Opaque cursor for the next page.
+  - name: per_page
+    in: query
+    description: Page size.
+  response: List endpoints return a JSON array of the entity; the cursor for the next page is supplied
+    by the API rather than embedded in a wrapper envelope in components.schemas.
+  note: Not every list endpoint takes cursor/per_page — filtering-heavy collections (activity log, expense
+    transactions) carry the richest parameter sets.
+filtering:
+  supported: true
+  style: repeated bracket arrays plus range operators
+  examples:
+  - project_uuids[]
+  - company_uuids[]
+  - expense_account_uuids[]
+  - activity_types[]
+  - classes[]
+  - types[]
+  - user_uuids[]
+  - date[gt]
+  - date[gte]
+  - date[lt]
+  - date[lte]
+  - performed_at[gte]
+  - performed_at[lt]
+  - has_receipt
+  - has_company
+  - has_class
+  - has_expense_account
+  - has_expense_category
+  note: Range filters use a PHP/Laravel-style bracket operator suffix; presence filters are boolean has_*
+    flags.
+sorting:
+  supported: true
+  param: sort
+  example: sort=nearby with latitude/longitude on v1.project.list; defaults to updated
+field_expansion:
+  supported: false
+  note: No expand or fields parameter is published; related entities are fetched by their own endpoints.
+metadata:
+  supported: false
+  note: No customer-defined metadata bag is exposed on any schema.
+request_tracing:
+  supported: true
+  header: x-app-invocation-id
+  direction: response
+  note: Observed on every live response including 401s. Client-supplied request ids are not documented.
+versioning:
+  style: path segment + document version
+  path: /api/v1
+  document_version: 0.0.10
+  note: The URL is pinned at v1 while the contract itself moves through 0.0.x. Breaking changes have shipped
+    WITHOUT a path bump — the v0.0.9 microsecond timestamp change and the v0.0.1-era required upload_type
+    parameter both altered existing behavior inside /v1.
+  see: changelog/fund-that-flip-changelog.yml
+errors:
+  format: vendor-json (NOT RFC 9457)
+  envelope: '{"message": string, "errors"?: object}'
+  content_type: application/json
+  see: errors/fund-that-flip-problem-types.yml
+rate_limit_signaling:
+  documented: true
+  quantified: false
+  status_code: 429
+  headers: []
+  note: 429 is documented; no limit numbers and no RateLimit-*/Retry-After headers.
+  see: rate-limits/fund-that-flip-rate-limits.yml
+identifiers:
+  style: uuid
+  note: Public identifiers are bare UUIDs with no type prefix; references are <entity>_uuid.
+timestamps:
+  format: ISO 8601 Zulu with microseconds
+  fields:
+  - created_at
+  - updated_at
+file_uploads:
+  style: upload intent
+  note: 'Attachments are two-step: POST v1.workspace.upload-intent.create to obtain an intent (201 Created),
+    with a required upload_type naming the use case, then attach.'
+cors:
+  access_control_allow_origin: '*'
+  observed: true

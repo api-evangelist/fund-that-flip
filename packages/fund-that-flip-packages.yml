@@ -1,0 +1,17 @@
+generated: '2026-08-16'
+method: searched
+source: npm registry, PyPI, RubyGems, Packagist, crates.io, NuGet, pkg.go.dev, Maven Central; https://github.com/FundThatFlip;
+  https://tools.flipperforce.com/docs/api
+package_count: 0
+official_count: 0
+packages: []
+note: No first-party client library exists in any public registry. Searched npm (flipperforce, @flipperforce/*,
+  upright-us, fundthatflip — all 404), PyPI (flipperforce, upright-api, fundthatflip — all 404), and the
+  other registries; nothing first-party surfaced. The GitHub org github.com/FundThatFlip is genuinely
+  the company (name "Fund That Flip", blog fundthatflip.com, description "Rebuilding communities through
+  alternative lending") but holds only 3 public repos, all third-party infrastructure — a fork of snipe-it,
+  a fork of health-monitor-rails, and action-get-keybase-secret — none of which is an API client. github.com/upright
+  is Upright Inc. of Japan (upr.ight.jp) and is NOT this company. Because there is no official SDK, NO
+  SDKs pointer is wired in apis.yml.
+consumption: 'The API is consumed over plain HTTP with an Authorization: Bearer header. The provider has
+  publicly said a Zapier integration is "Coming Soon", which would be the first no-code client.'

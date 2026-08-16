@@ -1,23 +1,123 @@
 aid: fund-that-flip
 name: Fund That Flip
-description: 'Fund That Flip is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: Fund That Flip is a Cleveland- and New York-based real estate fintech founded in 2014 that
+  lends to residential redevelopers and offers passive income opportunities to accredited investors, having
+  originated more than $2.6B in short-term hard money, fix-and-flip, new construction and DSCR loans.
+  In 2022 it acquired FlipperForce, a web-based project management, deal analysis, rehab estimating and
+  job-costing platform for house flippers and builders, and in September 2023 the combined lending and
+  software business rebranded as Upright (upright.us). The company's developer surface is the FlipperForce
+  Public API — an OpenAPI 3.1 documented REST API at tools.flipperforce.com/api/v1 covering projects,
+  expenses, income, receipts, photo logs, project updates, companies, expense accounts and the workspace
+  activity log.
 url: https://raw.githubusercontent.com/api-evangelist/fund-that-flip/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-16'
 modified: '2026-08-16'
+image: https://cdn.prod.website-files.com/64b99dfa2be98253c176ca3b/64fa2106537c70e46a8afb34_apple-touch-icon.png
 tags:
 - Company
-apis: []
+- Real Estate
+- Lending
+- Construction
+- Project Management
+- Financial Services
+- Investing
+- Fintech
+- Property Technology
+- Accounting
+apis:
+- aid: fund-that-flip:flipperforce-public-api
+  name: FlipperForce Public API
+  description: 'The FlipperForce Public API is the REST API behind Upright''s (formerly Fund That Flip''s)
+    FlipperForce project management platform for real estate redevelopers. It exposes 50 operations across
+    projects, expense transactions and line items, expense categories and accounts, project income, receipts,
+    photo logs, project updates, companies and company categories, file upload intents, the user account
+    and the workspace activity log. Access is by request only: a workspace owner requests a Public API
+    key from Workspace Settings > Integrations, and the key is sent as an HTTP Bearer token.'
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Projects
+  - Expenses
+  - Income
+  - Receipts
+  - Photos
+  - Activity Log
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-flipperforce-public-api.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+  - type: Overlay
+    url: overlays/fund-that-flip-flipperforce-public-api-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/fund-that-flip-domain-security.yml
+- type: Authentication
+  url: authentication/fund-that-flip-authentication.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.upright.us/
+- type: Portal
+  url: https://www.flipperforce.com/
+- type: Documentation
+  url: https://help.flipperforce.com/en/
+- type: APIReference
+  url: https://tools.flipperforce.com/docs/api
+- type: GettingStarted
+  url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+- type: Support
+  url: https://help.flipperforce.com/en/
+- type: HelpCenter
+  url: https://help.upright.us/en
+- type: Blog
+  url: https://learn.upright.us/real-estate-investing-blog
+- type: GitHubOrganization
+  url: https://github.com/FundThatFlip
+- type: Pricing
+  url: https://flipperforce.com/pricing
+- type: SignUp
+  url: https://tools.flipperforce.com/register
+- type: Login
+  url: https://tools.flipperforce.com/login
+- type: TermsOfService
+  url: https://flipperforce.com/legal
+- type: PrivacyPolicy
+  url: https://www.upright.us/legal
+- type: Packages
+  url: packages/fund-that-flip-packages.yml
+- type: LLMsTxt
+  url: llms/fund-that-flip-llms.txt
+- type: Conformance
+  url: conformance/fund-that-flip-conformance.yml
+- type: ErrorCatalog
+  url: errors/fund-that-flip-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/fund-that-flip-lifecycle.yml
+- type: Conventions
+  url: conventions/fund-that-flip-conventions.yml
+- type: ChangeLog
+  url: changelog/fund-that-flip-changelog.yml
+- type: DataModel
+  url: data-model/fund-that-flip-data-model.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/fund-that-flip-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/fund-that-flip-rate-limits.yml
+x-enrichment:
+  date: '2026-08-16'
+  status: enriched
+  artifacts_added: 22
+  pass: local-v1

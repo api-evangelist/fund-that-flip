@@ -1,0 +1,45 @@
+generated: '2026-08-16'
+method: searched
+source: https://tools.flipperforce.com/docs/api.json + https://www.flipperforce.com/house-flipping-blog/new-public-api
+maturity: early-access
+note: The provider describes the Public API as a soft release for "tech-savvy users or those with engineering
+  resources", available by request only, and says it is actively developing further endpoints and open
+  to adding endpoints on request. Version 0.0.10 and the v0.0.x scheme are consistent with pre-1.0 status.
+versioning:
+  scheme: path v1 + semver-prerelease document version
+  current: 0.0.10
+  policy_published: false
+  note: No written versioning policy. Breaking changes have shipped inside /v1 (see changelog v0.0.9).
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations: []
+  note: 'No deprecation policy, no RFC 8594 Sunset/Deprecation headers, and no operation in the spec carries
+    deprecated: true. Because no deprecation policy is published, NO Deprecation pointer is wired in apis.yml.'
+status_page:
+  published: false
+  url: null
+  note: No status page found. status.upright.us and status.flipperforce.com do not resolve, and no status
+    link appears on the site, help center or API docs. Because no status page exists, NO StatusPage pointer
+    is wired in apis.yml.
+sla:
+  published: false
+  note: No uptime or support SLA published for the API.
+support:
+  email: support@flipperforce.com
+  chat: https://tools.flipperforce.com/
+  help_center: https://help.flipperforce.com/en/
+roadmap:
+  published: false
+  stated_direction: The provider has publicly stated it is developing endpoints for receipts, file attachments
+    and expenses, and that a Zapier integration is "Coming Soon". Receipts, expenses and upload intents
+    have since shipped (changelog v0.0.2-v0.0.6).
+company_lifecycle:
+  founded: 2014
+  acquired_flipperforce: 2022
+  rebranded: 2023-09
+  current_brand: Upright
+  note: The Fund That Flip brand is retired for consumer-facing use; the company operates as Upright.
+    The GitHub org and the legacy fundthatflip.com domain still carry the old name — fundthatflip.com
+    now answers 403 to unauthenticated crawlers.

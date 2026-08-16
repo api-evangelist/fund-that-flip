@@ -1,0 +1,15 @@
+generated: '2026-08-16'
+method: derived
+source: openapi/fund-that-flip-flipperforce-public-api.yml
+summary:
+  types:
+  - http
+schemes:
+- name: PublicApiBearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: FlipperForce Public API key
+  description: 'Use the Public API key provided by FlipperForce as a Bearer token. Send the
+    key exactly as provided in the Authorization header: `Authorization: Bearer <api-key>`.'
+  sources:
+  - openapi/fund-that-flip-flipperforce-public-api.yml

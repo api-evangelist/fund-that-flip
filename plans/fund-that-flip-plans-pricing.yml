@@ -1,0 +1,117 @@
+generated: '2026-08-16'
+method: searched
+source: https://flipperforce.com/pricing
+product: FlipperForce (Upright)
+currency: USD
+billing_periods:
+- monthly
+- annual
+note: 'Pricing is published for the FlipperForce software product. The lending/investing side of the business
+  (upright.us) prices per loan and per offering rather than by plan, and publishes no plan table. API
+  access is NOT sold as a plan: the Public API key is granted by request from Workspace Settings > Integrations
+  and the pricing page attaches no tier condition to it.'
+trial:
+  length_days: 30
+  credit_card_required: false
+plan_count: 7
+plans:
+- name: Rookie Analysis
+  family: Deal Analysis Only
+  price_monthly: 0
+  price_annual: 0
+  users: 1
+  included_projects: 5
+  quota_unit: analyses
+  includes:
+  - Deal analysis
+  - Rehab estimation
+  excludes:
+  - Comps
+  - Property and owner data
+  - Reports
+  - Team features
+- name: Solo Analysis
+  family: Deal Analysis Only
+  price_monthly: 49
+  price_monthly_billed_annually: 39
+  price_annual: 468
+  users: 1
+  included_projects: 50
+  quota_unit: analyses
+  includes:
+  - Deal analysis
+  - Rehab estimation
+  - Comps
+  - Property and owner data
+  - Reports
+- name: Team Analysis
+  family: Deal Analysis Only
+  price_monthly: 129
+  price_monthly_billed_annually: 99
+  price_annual: 1188
+  users: 5
+  included_projects: 100
+  quota_unit: analyses
+  includes:
+  - Everything in Solo Analysis
+  - Team collaboration
+- name: Business Analysis
+  family: Deal Analysis Only
+  price_monthly: 299
+  price_annual: 1800
+  users: unlimited
+  included_projects: unlimited
+  quota_unit: analyses
+  includes:
+  - Everything in Team Analysis
+- name: Solo
+  family: All-in-One
+  price_monthly: 79
+  price_monthly_billed_annually: 59
+  price_annual: 708
+  users: 1
+  included_projects: 50
+  quota_unit: projects
+  includes:
+  - Deal analysis
+  - Project management
+  - Accounting
+  - Reporting
+  - Photos
+  - Project updates
+  excludes:
+  - Team collaboration
+- name: Team
+  family: All-in-One
+  price_monthly: 199
+  price_monthly_billed_annually: 149
+  price_annual: 1788
+  users: 5
+  included_projects: 100
+  quota_unit: projects
+  includes:
+  - Everything in Solo
+  - Project teams
+  - Permissions
+  - Tasks
+  - Notifications
+  - Activity log
+- name: Business
+  family: All-in-One
+  price_monthly: 499
+  price_monthly_billed_annually: 349
+  price_annual: 4188
+  users: unlimited
+  included_projects: unlimited
+  quota_unit: projects
+  includes:
+  - Everything in Team
+  - Custom platform branding
+overage: null
+overage_note: No overage pricing is published. Plans cap users and projects rather than metering them.
+payment_methods:
+- Visa
+- MasterCard
+- American Express
+- Discover
+refund_policy: Monthly plans cancel at the end of the cycle; annual plans carry a 30-day money-back guarantee.

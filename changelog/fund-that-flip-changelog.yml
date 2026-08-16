@@ -1,0 +1,65 @@
+generated: '2026-08-16'
+method: searched
+source: https://tools.flipperforce.com/docs/api.json (info.description, "Changelog" section)
+note: The FlipperForce Public API publishes its changelog INSIDE the OpenAPI document (info.description)
+  rather than on a separate dated page. Entries are dated and versioned, and the version matches info.version.
+scheme: semver-prerelease
+current_version: 0.0.10
+api_version_path_segment: v1
+location: in-spec (info.description)
+entries:
+- version: 0.0.10
+  date: '2026-07-25'
+  breaking: false
+  additions:
+  - Activity Log support (v1.workspace.activity-log.list)
+  highlights: Adds the workspace activity log to the public surface.
+- version: 0.0.9
+  date: '2026-07-23'
+  breaking: true
+  additions: []
+  highlights: created_at and updated_at now include microseconds. Old format 2026-06-14T15:30:45Z, new
+    format 2026-06-14T15:30:45.123456Z. A consumer parsing the old fixed-width format will break.
+- version: 0.0.8
+  date: '2026-07-21'
+  breaking: false
+  additions: []
+  highlights: OpenAPI spec now documents the Bearer Token authentication strategy.
+- version: 0.0.6
+  date: '2026-06-22'
+  breaking: false
+  additions:
+  - Project Income (v1.project.income.list)
+  highlights: Create Upload Intent corrected to document 201 Created instead of 200 OK.
+- version: 0.0.4
+  date: '2026-06-21'
+  breaking: false
+  additions:
+  - 'Project Expenses: Transactions'
+  - 'Project Expenses: Line Items'
+  highlights: Expense detail becomes addressable.
+- version: 0.0.3
+  date: '2026-06-04'
+  breaking: false
+  additions:
+  - 'Project Expenses: Categories'
+  highlights: Expense categories listable.
+- version: 0.0.2
+  date: '2026-06-02'
+  breaking: false
+  additions:
+  - Expense Accounts
+  - Companies
+  - Company Categories
+  highlights: Workspace-level reference data added.
+- version: 0.0.1
+  date: '2025-09-03'
+  breaking: false
+  additions: []
+  highlights: Project Photo Log create supports ordering photos by EXIF timestamp via photo_timestamp.
+- version: null
+  date: '2025-08-13'
+  breaking: true
+  additions: []
+  highlights: Create Upload Intent now REQUIRES a new POST parameter upload_type noting the uploaded file
+    use case.

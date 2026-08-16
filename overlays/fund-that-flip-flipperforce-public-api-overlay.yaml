@@ -1,0 +1,40 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — FlipperForce Public API
+  version: 0.1.0
+extends: openapi/fund-that-flip-flipperforce-public-api.yml
+x-generated: '2026-08-16'
+x-method: generated
+x-source: API Evangelist enrichment pipeline
+actions:
+- target: $.info
+  description: Record the operating company behind the contract. FlipperForce is the project-management
+    product of Upright, formerly Fund That Flip.
+  update:
+    x-provider:
+      company: Fund That Flip
+      brand: Upright
+      product: FlipperForce
+      website: https://www.upright.us/
+      rebranded: 2023-09
+- target: $.info
+  description: Surface the support contact declared in prose so it is machine-readable.
+  update:
+    contact:
+      name: FlipperForce Support
+      email: support@flipperforce.com
+      url: https://help.flipperforce.com/en/
+- target: $.info
+  description: Link the terms and pricing pages the contract does not reference.
+  update:
+    termsOfService: https://flipperforce.com/legal
+- target: $.components.responses.AuthenticationException
+  description: Name the remediation for a 401 so agents can act on it.
+  update:
+    x-remediation: 'Request a Public API key from Workspace Settings > Integrations and send it as Authorization:
+      Bearer <api-key>.'
+- target: $.components.responses.ValidationException
+  description: Document the field-error shape as an agent-actionable rule.
+  update:
+    x-remediation: 'Read the errors object: each key is a request field, each value an array of rejection
+      reasons.'
