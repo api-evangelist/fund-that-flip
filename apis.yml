@@ -18,6 +18,17 @@ modified: '2026-08-16'
 image: https://cdn.prod.website-files.com/64b99dfa2be98253c176ca3b/64fa2106537c70e46a8afb34_apple-touch-icon.png
 tags:
 - Company
+- Real-Estate
+- Lending
+- Construction
+- Project Management
+- Financial-Services
+- Investing
+- Fintech
+- Property Technology
+- Accounting
+tags_raw:
+- Company
 - Real Estate
 - Lending
 - Construction
@@ -39,6 +50,13 @@ apis:
   humanURL: https://tools.flipperforce.com/docs/api
   baseURL: https://tools.flipperforce.com/api/v1
   tags:
+  - Project
+  - Expenses
+  - Income
+  - Receipts
+  - Photos
+  - Activity Log
+  tags_raw:
   - Projects
   - Expenses
   - Income
