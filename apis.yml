@@ -39,47 +39,262 @@ tags_raw:
 - Property Technology
 - Accounting
 apis:
-- aid: fund-that-flip:flipperforce-public-api
-  name: FlipperForce Public API
-  description: 'The FlipperForce Public API is the REST API behind Upright''s (formerly Fund That Flip''s)
-    FlipperForce project management platform for real estate redevelopers. It exposes 50 operations across
-    projects, expense transactions and line items, expense categories and accounts, project income, receipts,
-    photo logs, project updates, companies and company categories, file upload intents, the user account
-    and the workspace activity log. Access is by request only: a workspace owner requests a Public API
-    key from Workspace Settings > Integrations, and the key is sent as an HTTP Bearer token.'
+- aid: fund-that-flip:fund-that-flip-activity-log-api
+  name: Fund That Flip Activity Log API
+  description: The Activity Log API from Fund That Flip — 2 operation(s) for activity log.
   humanURL: https://tools.flipperforce.com/docs/api
   baseURL: https://tools.flipperforce.com/api/v1
   tags:
-  - Project
-  - Expenses
-  - Income
-  - Receipts
-  - Photos
-  - Activity Log
-  tags_raw:
-  - Projects
-  - Expenses
-  - Income
-  - Receipts
-  - Photos
   - Activity Log
   properties:
   - type: OpenAPI
-    url: openapi/fund-that-flip-flipperforce-public-api.yml
+    url: openapi/fund-that-flip-activity-log-api-openapi.yml
   - type: APIReference
     url: https://tools.flipperforce.com/docs/api
   - type: Documentation
     url: https://www.flipperforce.com/house-flipping-blog/new-public-api
   - type: SignUp
     url: https://tools.flipperforce.com/integrations
-  - type: Overlay
-    url: overlays/fund-that-flip-flipperforce-public-api-overlay.yaml
+- aid: fund-that-flip:fund-that-flip-attachment-upload-api
+  name: Fund That Flip Attachment Upload API
+  description: The Attachment Upload API from Fund That Flip — 1 operation(s) for attachment upload.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Attachment Upload
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-attachment-upload-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-company-api
+  name: Fund That Flip Company API
+  description: The Company API from Fund That Flip — 4 operation(s) for company.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Company
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-company-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-company-categories-api
+  name: 'Fund That Flip Company: Categories API'
+  description: >-
+    The Company: Categories API from Fund That Flip — 3 operation(s) for company: categories.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - 'Company: Categories'
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-company-categories-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-expense-accounts-api
+  name: Fund That Flip Expense Accounts API
+  description: The Expense Accounts API from Fund That Flip — 3 operation(s) for expense accounts.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Expense Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-expense-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-api
+  name: Fund That Flip Project API
+  description: The Project API from Fund That Flip — 3 operation(s) for project.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Project
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-expenses-categories-api
+  name: 'Fund That Flip Project Expenses: Categories API'
+  description: >-
+    The Project Expenses: Categories API from Fund That Flip — 1 operation(s) for project expenses: categories.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - 'Project Expenses: Categories'
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-expenses-categories-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-expenses-line-items-api
+  name: 'Fund That Flip Project Expenses: Line Items API'
+  description: >-
+    The Project Expenses: Line Items API from Fund That Flip — 2 operation(s) for project expenses: line
+    items.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - 'Project Expenses: Line Items'
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-expenses-line-items-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-expenses-transactions-api
+  name: 'Fund That Flip Project Expenses: Transactions API'
+  description: >-
+    The Project Expenses: Transactions API from Fund That Flip — 3 operation(s) for project expenses:
+    transactions.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - 'Project Expenses: Transactions'
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-expenses-transactions-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-income-api
+  name: Fund That Flip Project Income API
+  description: The Project Income API from Fund That Flip — 3 operation(s) for project income.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Project Income
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-income-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-photo-log-photos-api
+  name: 'Fund That Flip Project Photo Log: Photos API'
+  description: >-
+    The Project Photo Log: Photos API from Fund That Flip — 3 operation(s) for project photo log: photos.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - 'Project Photo Log: Photos'
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-photo-log-photos-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-receipts-api
+  name: Fund That Flip Project Receipts API
+  description: The Project Receipts API from Fund That Flip — 3 operation(s) for project receipts.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Project Receipts
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-receipts-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-updates-api
+  name: Fund That Flip Project Updates API
+  description: The Project Updates API from Fund That Flip — 3 operation(s) for project updates.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - Project Updates
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-updates-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-project-updates-photos-api
+  name: 'Fund That Flip Project Updates: Photos API'
+  description: >-
+    The Project Updates: Photos API from Fund That Flip — 2 operation(s) for project updates: photos.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - 'Project Updates: Photos'
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-project-updates-photos-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
+- aid: fund-that-flip:fund-that-flip-user-api
+  name: Fund That Flip User API
+  description: The User API from Fund That Flip — 1 operation(s) for user.
+  humanURL: https://tools.flipperforce.com/docs/api
+  baseURL: https://tools.flipperforce.com/api/v1
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/fund-that-flip-user-api-openapi.yml
+  - type: APIReference
+    url: https://tools.flipperforce.com/docs/api
+  - type: Documentation
+    url: https://www.flipperforce.com/house-flipping-blog/new-public-api
+  - type: SignUp
+    url: https://tools.flipperforce.com/integrations
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/fund-that-flip-flipperforce-public-api-overlay.yaml
 - type: DomainSecurity
   url: security/fund-that-flip-domain-security.yml
 - type: Authentication
