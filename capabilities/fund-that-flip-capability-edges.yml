@@ -1,0 +1,35 @@
+slug: fund-that-flip
+provider: Fund That Flip
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Project
+  spec_file: fund-that-flip-project-api-openapi.yml
+  capability_id: BC-900.30
+  capability_id_l1: BC-900
+  capability_name: Project Management
+  confidence: 0.78
+  evidence: GET /project/list, POST /workspace/{workspace}/project Create; schemas Project, ProjectPipelineStage,
+    ProjectStrategy
+  reason: FlipperForce is described by the vendor as 'a web-based project management, deal analysis, rehab
+    estimating' tool, and this tag is straightforward lifecycle CRUD over Project records with pipeline
+    stages — project execution tracking rather than any lending capability.
+- tag: Project Updates
+  spec_file: fund-that-flip-project-updates-api-openapi.yml
+  capability_id: BC-900.30
+  capability_id_l1: BC-900
+  capability_name: Project Management
+  confidence: 0.7
+  evidence: POST /project/{projectV1}/updates/create — schemas V1ProjectProgressUpdateRequest, Project_Update
+  reason: Creation and maintenance of progress updates on a project (request schema is explicitly 'ProjectProgressUpdate'),
+    i.e. project tracking and status reporting within project execution.

@@ -305,6 +305,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/fund-that-flip-capability-edges.yml
+  name: Fund That Flip Business Capability Map
 - type: Overlay
   url: overlays/fund-that-flip-flipperforce-public-api-overlay.yaml
 - type: DomainSecurity
