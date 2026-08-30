@@ -1,0 +1,321 @@
+openapi: 3.2.0
+info:
+  title: FlipperForce Public Attachment Upload API
+  version: 0.0.10
+  description: '# FlipperForce Public API • Version 1
+
+
+    ## How do I request an API key?
+
+
+    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
+
+    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
+
+
+    ## Support / Help
+
+
+    * Email: support@flipperforce.com
+
+    * Chat: https://tools.flipperforce.com/
+
+
+    ## Rate Limits
+
+
+    If you encounter a `429 Too Many Requests` response, you have submitted too many
+
+    requests in a short amount of time. Please decrease the amount or frequency of
+
+    your requests and try again.
+
+
+    ## Changelog
+
+
+    ### July 25, 2026 - v0.0.10
+
+
+    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
+
+
+    ### July 23, 2026 - v0.0.9
+
+
+    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
+
+
+    ### July 21, 2026 - v0.0.8
+
+
+    * OpenAPI spec documents Bearer Token authentication strategy
+
+
+    ### June 22, 2026 - v0.0.6
+
+
+    * Add support for [Project Income](/operations/v1.project.income.list).
+
+    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
+
+
+    ### June 21, 2026 - v0.0.4
+
+
+    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
+
+    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
+
+
+    ### June 4, 2026 - v0.0.3
+
+
+    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
+
+
+    ### June 2, 2026 - v0.0.2
+
+
+    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
+
+    * Add support for [Companies](/operations/v1.workspace.companies.list).
+
+    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
+
+
+    ### September 3, 2025 - v0.0.1
+
+
+    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
+
+
+    ### August 13, 2025
+
+
+    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
+
+    '
+servers:
+- url: https://tools.flipperforce.com/api/v1
+security:
+- PublicApiBearerAuth: []
+tags:
+- name: Attachment Upload
+paths:
+  /workspace/{workspace}/upload-intent:
+    post:
+      operationId: v1.workspace.upload-intent.create
+      description: "Creating an Upload Intent is Step 1 in uploading files.\n\nSubmit metadata about the file you intend to upload. The Response\nincludes a Signed URL, HTTP Method, and HTTP Headers where your client\nwill be temporarily authorized to upload the file. Use the Response data\nto construct a file upload request in Step 2.\n\nStep 2 is using the Signed URL, Method, and Headers from Step 1 to upload\nthe file to file storage:\n\n```\nx-amz-acl: private\nContent-MD5: rz1TrXzmoB4WmdeUde+CIQ==\nContent-Type: image/png\n... above are example headers from an Upload Intent ...\nPOST https://the-signed-url-here\nraw-binary-file-data-here\n```\n\nStep 3 after uploading succeeds is to call the next API for the specific\nuse case you uploaded the file. Each use case has its own API call where\nyou must supply the `uuid` returned in Step 1, allowing Step 3 to find\nand reference the uploaded file:\n\n* [Create a Project Receipt](/operations/v1.project.receipts.create)\n* [Create a Photo Log Photo](/operations/v1.project.photo-log.create)\n* [Create a Project Update Photo](/operations/v1.project.updates.photos.create)\n\n### Response from Signed URL: Response Codes\n\n| Code | Description |\n| - | - |\n| 200 OK        | File successfully received and satisfied all validation checks. No body content. |\n| 400 Bad Request | Perhaps the uploaded file's MD5 checksum did not match what was given in the Upload Intent. Retry by requesting a new Upload Intent and signed URL. |\n| 403 Forbidden | The signed URL has expired. Retry by request a new Upload Intent and signed URL. |\n\n### Response from Signed URL\n\nThe Signed URL response defaults to returning XML. If you want JSON,\nsubmit a header `Accept: application/json`.\n\nExample Error Response Body when the Content-MD5 header does not match\nwhat was submitted in the Request Body:\n\n```\n{\n  \"Code\": \"BadDigest\",\n  \"Message\": \"\",\n  \"BucketName\": \"flipperforce-prod\",\n  \"RequestId\": \"tx000007027848ea442f7f9-006839cfe7-1060947b4-nyc3c\",\n  \"HostId\": \"1060947b4-nyc3c-nyc3-zg03\"\n}\n```"
+      summary: Create Upload Intent
+      tags:
+      - Attachment Upload
+      parameters:
+      - name: workspace
+        in: path
+        required: true
+        description: Workspace UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                upload_type:
+                  description: '(Required) Specify how you intend to use the uploaded file.
+
+                    The metadata submitted will be used to validate the file type
+
+                    can be used for this use case. Accepted values:
+
+
+                    * `photo-log-photo` - [Project Photo Log: Photo](/operations/v1.project.photo-log.create)
+
+                    * `project-update-photo` - [Project Update: Photo](/operations/v1.project.updates.photos.create)
+
+                    * `receipt` - [Project Receipt](/operations/v1.project.receipts.create)'
+                  $ref: '#/components/schemas/AttachmentUploadIntentType'
+                filename:
+                  type: string
+                  description: Name of the file, such as "IMG_1234.jpg"
+                  maxLength: 1000
+                checksum:
+                  type: string
+                  description: MD5 checksum of the file, such as "a763097058593e8ac1ba9d17de1155df"
+                  pattern: ^[0-9a-fA-F]{32}$
+                  minLength: 32
+                  maxLength: 32
+                mime_type:
+                  type: string
+                  description: 'IANA Media Type. Common types that are supported: image/jpeg,
+
+                    image/png, image/gif, image/webp, image/heic, image/heif, image/avif'
+                size:
+                  type: integer
+                  description: File size in bytes
+                  minimum: 0
+                  maximum: 0
+              required:
+              - filename
+              - checksum
+              - mime_type
+              - size
+      responses:
+        '201':
+          description: '`Upload Intent`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Upload_Intent'
+                required:
+                - data
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+components:
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
+  schemas:
+    Upload_Intent:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Upload Intent unique identifier
+        expires_at:
+          type: string
+          description: 'Uploading a file to this URL will no longer be possible after
+
+            this time.'
+        url:
+          type: string
+          description: 'Signed URL where file contents must be submitted. Only valid for
+
+            a limited amount of time, and only authorized for the file whose
+
+            metadata was submitted.'
+        method:
+          type: string
+          description: 'Signed URL requires using this HTTP method be used when
+
+            submitting file contents. Such as PUT or POST.'
+        headers:
+          type: object
+          description: 'HTTP headers that must be included when uploading the file to
+
+            the included URL. Keys are HTTP header names, values are the
+
+            header value to send.'
+          additionalProperties:
+            type: string
+      required:
+      - uuid
+      - expires_at
+      - url
+      - method
+      - headers
+      title: Upload Intent
+    AttachmentUploadIntentType:
+      type: string
+      description: 'Metadata for AttachmentUploadIntent to denote which type of file the intent was created for.
+
+        '
+      enum:
+      - photo-log-photo
+      - project-update-photo
+      - receipt
+      title: AttachmentUploadIntentType
+  securitySchemes:
+    PublicApiBearerAuth:
+      type: http
+      description: 'Use the Public API key provided by FlipperForce as a Bearer token. Send the key exactly as provided in the Authorization header: `Authorization: Bearer <api-key>`.'
+      scheme: bearer
+      bearerFormat: FlipperForce Public API key

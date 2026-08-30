@@ -1,0 +1,662 @@
+openapi: 3.2.0
+info:
+  title: 'FlipperForce Public Project Photo Log: Photos API'
+  version: 0.0.10
+  description: '# FlipperForce Public API • Version 1
+
+
+    ## How do I request an API key?
+
+
+    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
+
+    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
+
+
+    ## Support / Help
+
+
+    * Email: support@flipperforce.com
+
+    * Chat: https://tools.flipperforce.com/
+
+
+    ## Rate Limits
+
+
+    If you encounter a `429 Too Many Requests` response, you have submitted too many
+
+    requests in a short amount of time. Please decrease the amount or frequency of
+
+    your requests and try again.
+
+
+    ## Changelog
+
+
+    ### July 25, 2026 - v0.0.10
+
+
+    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
+
+
+    ### July 23, 2026 - v0.0.9
+
+
+    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
+
+
+    ### July 21, 2026 - v0.0.8
+
+
+    * OpenAPI spec documents Bearer Token authentication strategy
+
+
+    ### June 22, 2026 - v0.0.6
+
+
+    * Add support for [Project Income](/operations/v1.project.income.list).
+
+    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
+
+
+    ### June 21, 2026 - v0.0.4
+
+
+    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
+
+    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
+
+
+    ### June 4, 2026 - v0.0.3
+
+
+    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
+
+
+    ### June 2, 2026 - v0.0.2
+
+
+    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
+
+    * Add support for [Companies](/operations/v1.workspace.companies.list).
+
+    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
+
+
+    ### September 3, 2025 - v0.0.1
+
+
+    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
+
+
+    ### August 13, 2025
+
+
+    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
+
+    '
+servers:
+- url: https://tools.flipperforce.com/api/v1
+security:
+- PublicApiBearerAuth: []
+tags:
+- name: 'Project Photo Log: Photos'
+paths:
+  /project/{projectV1}/photo-log:
+    get:
+      operationId: v1.project.photo-log.list
+      description: 'List all photos in a Project''s Photo Log. Photos are grouped by the date
+
+        they were taken.'
+      summary: List
+      tags:
+      - 'Project Photo Log: Photos'
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: '`Project Photo Log`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project_Photo_Log'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+  /project/{projectV1}/photo-log/create:
+    post:
+      operationId: v1.project.photo-log.create
+      description: 'Create a Photo Log Photo using an uploaded photo from an
+
+        [Upload Intent](/operations/v1.workspace.upload-intent.create).
+
+
+        Submitting the `photo_timestamp` parameter as a Unix timestamp in seconds
+
+        (not milliseconds) since the Unix epoch will allow us to order your
+
+        photos based on when they were captured. You can derive this from your
+
+        photo''s EXIF data or the timestamp the photo file was created.'
+      summary: Create
+      tags:
+      - 'Project Photo Log: Photos'
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                intent_uuid:
+                  type: string
+                  format: uuid
+                  description: '[Upload Intent](/operations/v1.workspace.upload-intent.create) with a successfully uploaded photo'
+                batch_uuid:
+                  type: string
+                  format: uuid
+                  description: Imagine a User has selected 3 photos from their device, and captured 2 new photos with their camera. They tap Upload to begin uploading that batch of photos. API clients should generate a single Batch UUID (version 4) at that time, and submit that same Batch UUID for each of those 5 API calls. The API uses Batch UUID to associate those 5 photos together as one Activity Log entry.
+                photo_date:
+                  type: string
+                  format: YYYY-MM-DD
+                  description: Date this Photo was captured. Photos with the same Date display ordered next to each other in the Photo Log.
+                photo_timestamp:
+                  type: integer
+                  description: Timestamp when this Photo was captured. Represented in seconds since Unix epoch. Allows us to order photos in the Photo Log based on when they were captured.
+                photo_description:
+                  type: string
+                  description: Text displayed alongside the photo. Useful for communicating more context about what is in the photo or that the viewer would find informative.
+              required:
+              - intent_uuid
+              - photo_date
+      responses:
+        '201':
+          description: '`Project Photo Log: Photo`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project_Photo_Log__Photo'
+                required:
+                - data
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+  /project/{projectV1}/photo-log/{photoUuid}:
+    patch:
+      operationId: v1.project.photo-log.update
+      description: Update the metadata for a single Photo Log Photo.
+      summary: Update
+      tags:
+      - 'Project Photo Log: Photos'
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: photoUuid
+        in: path
+        required: true
+        description: Photo Log Photo UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1PhotoLogUpdateRequest'
+      responses:
+        '200':
+          description: '`Project Photo Log: Photo`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project_Photo_Log__Photo'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+    delete:
+      operationId: v1.project.photo-log.destroy
+      description: Delete a Photo Log Photo.
+      summary: Delete
+      tags:
+      - 'Project Photo Log: Photos'
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: photoUuid
+        in: path
+        required: true
+        description: Photo Log Photo UUID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+components:
+  responses:
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+  schemas:
+    File:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        name:
+          type: string
+          description: 'Short human-readable description to distinguish this file from
+
+            other files across the entire Project'
+        size:
+          type: integer
+          description: File size in bytes
+        type:
+          type: string
+          description: 'Roughly what kind of file is available. Such as `pdf` or `jpeg`.
+
+            Note that this is not a file MIME-type, but can be used by
+
+            clients to change how they handle the file.'
+        source_url:
+          type: object
+          description: URLs to full versions of the file
+          properties:
+            view:
+              type: string
+              description: URL to view the file on the device, as an inline HTTP response
+            download:
+              type: string
+              description: URL to download the file, as a download HTTP response
+          required:
+          - view
+          - download
+        preview_url:
+          type: object
+          description: 'URLs to view smaller versions of the file''s contents. Images
+
+            will return a smaller version of the image itself. Documents
+
+            will return a placeholder document image and not the file''s
+
+            actual contents.'
+          properties:
+            thumbnail:
+              type: string
+              description: Up to approximately 300px wide
+            large:
+              type: string
+              description: Up to approximately 600px wide
+          required:
+          - thumbnail
+          - large
+      required:
+      - uuid
+      - name
+      - size
+      - type
+      - source_url
+      - preview_url
+      title: File
+    V1PhotoLogUpdateRequest:
+      type: object
+      properties:
+        photo_date:
+          type: string
+          format: date
+          description: 'Optional. Date this Photo was captured. Photos with the same
+
+            Date display ordered next to each other in the Photo Log.'
+        photo_description:
+          type:
+          - string
+          - 'null'
+          description: 'Optional. Text displayed alongside the photo. Useful for
+
+            communicating more context about what is in the photo.'
+      title: V1PhotoLogUpdateRequest
+    Project_Photo_Log:
+      type: object
+      properties:
+        photos_by_date:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project_Photo_Log__Date_Group'
+      required:
+      - photos_by_date
+      title: Project Photo Log
+    Project_Photo_Log__Date_Group:
+      type: object
+      properties:
+        group_date:
+          type: string
+          description: Photos should display in a group titled by this date. In format `YYYY-MM-DD`
+        photos:
+          type: array
+          description: Photos grouped by this date
+          items:
+            $ref: '#/components/schemas/Project_Photo_Log__Photo'
+      required:
+      - group_date
+      - photos
+      title: 'Project Photo Log: Date Group'
+    Project_Photo_Log__Photo:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Identifier
+        order:
+          type: integer
+          description: 'Sequence position of this Photo relative to other Photos with
+
+            the same Photo Date. Smaller numbers will display before larger
+
+            numbers. Often this is the Unix timestamp of when the Photo was
+
+            captured. But if the photos have been manually re-ordered, the
+
+            order will begin from 0 and increment by 1. If two photos have
+
+            the same order, photos created more recently will display first.'
+        created_at:
+          type: string
+          description: 'Timestamp when Photo was added to Photo Log in ISO 8601 Zulu
+
+            format with microseconds. Example: `2025-04-30T21:21:10.123456Z`'
+        photo_date:
+          type: string
+          description: Date Group where this Photo is organized. In format `YYYY-MM-DD`
+        photo_description:
+          type:
+          - string
+          - 'null'
+          description: 'Text displayed alongside the photo. Useful for communicating more
+
+            context about what is in the photo or that the viewer would find informative.'
+        photo:
+          description: 'Details about a single Photo, such as URLs for displaying it
+
+            at various sizes'
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - order
+      - created_at
+      - photo_date
+      - photo_description
+      - photo
+      title: 'Project Photo Log: Photo'
+  securitySchemes:
+    PublicApiBearerAuth:
+      type: http
+      description: 'Use the Public API key provided by FlipperForce as a Bearer token. Send the key exactly as provided in the Authorization header: `Authorization: Bearer <api-key>`.'
+      scheme: bearer
+      bearerFormat: FlipperForce Public API key

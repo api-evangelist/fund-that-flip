@@ -1,0 +1,743 @@
+openapi: 3.2.0
+info:
+  title: FlipperForce Public Project Receipts API
+  version: 0.0.10
+  description: '# FlipperForce Public API • Version 1
+
+
+    ## How do I request an API key?
+
+
+    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
+
+    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
+
+
+    ## Support / Help
+
+
+    * Email: support@flipperforce.com
+
+    * Chat: https://tools.flipperforce.com/
+
+
+    ## Rate Limits
+
+
+    If you encounter a `429 Too Many Requests` response, you have submitted too many
+
+    requests in a short amount of time. Please decrease the amount or frequency of
+
+    your requests and try again.
+
+
+    ## Changelog
+
+
+    ### July 25, 2026 - v0.0.10
+
+
+    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
+
+
+    ### July 23, 2026 - v0.0.9
+
+
+    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
+
+
+    ### July 21, 2026 - v0.0.8
+
+
+    * OpenAPI spec documents Bearer Token authentication strategy
+
+
+    ### June 22, 2026 - v0.0.6
+
+
+    * Add support for [Project Income](/operations/v1.project.income.list).
+
+    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
+
+
+    ### June 21, 2026 - v0.0.4
+
+
+    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
+
+    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
+
+
+    ### June 4, 2026 - v0.0.3
+
+
+    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
+
+
+    ### June 2, 2026 - v0.0.2
+
+
+    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
+
+    * Add support for [Companies](/operations/v1.workspace.companies.list).
+
+    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
+
+
+    ### September 3, 2025 - v0.0.1
+
+
+    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
+
+
+    ### August 13, 2025
+
+
+    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
+
+    '
+servers:
+- url: https://tools.flipperforce.com/api/v1
+security:
+- PublicApiBearerAuth: []
+tags:
+- name: Project Receipts
+paths:
+  /project/{projectV1}/receipts/list:
+    get:
+      operationId: v1.project.receipts.list
+      description: 'List Receipts within a Project.
+
+
+        Results are ordered by `issue_date`, then `created_at` time.
+
+
+        Results use cursor pagination.'
+      summary: List
+      tags:
+      - Project Receipts
+      parameters:
+      - name: per_page
+        in: query
+        description: Number of records to return at a time.
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 1000
+      - name: cursor
+        in: query
+        schema:
+          type: string
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Paginated set of `Receipt`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Receipt'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type:
+                        - string
+                        - 'null'
+                      last:
+                        type:
+                        - string
+                        - 'null'
+                      prev:
+                        type:
+                        - string
+                        - 'null'
+                      next:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - first
+                    - last
+                    - prev
+                    - next
+                  meta:
+                    type: object
+                    properties:
+                      path:
+                        type:
+                        - string
+                        - 'null'
+                        description: Base path for paginator generated URLs.
+                      per_page:
+                        type: integer
+                        description: Number of items shown per page.
+                        minimum: 0
+                      next_cursor:
+                        type:
+                        - string
+                        - 'null'
+                        description: The "cursor" that points to the next set of items.
+                      prev_cursor:
+                        type:
+                        - string
+                        - 'null'
+                        description: The "cursor" that points to the previous set of items.
+                    required:
+                    - path
+                    - per_page
+                    - next_cursor
+                    - prev_cursor
+                required:
+                - data
+                - links
+                - meta
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+  /project/{projectV1}/receipts/create:
+    post:
+      operationId: v1.project.receipts.create
+      description: 'Store an uploaded file as a Project Receipt by using an
+
+        [Upload Intent](/operations/v1.workspace.upload-intent.create)
+
+        for each file.
+
+
+        This endpoint does not currently support associating the Receipt with
+
+        Expenses. Only storing the file as a Receipt.
+
+
+        ## Associating to Expenses
+
+
+        A Receipt can be associated to a [Project Expense Transaction](/operations/v1.project.expense-transactions.create) so you can track which Expenses and Transactions are accounted for on the Receipt.
+
+
+        A single Receipt can only be associated to one Transaction.
+
+
+        ## FlipperForce Field - Upload Receipts using our mobile app
+
+
+        If you have Receipt files or photos on your phone, uploading Receipts using our mobile app "FlipperForce Field" may be easier than manually instrumenting our Public API.
+
+
+        * [iOS Mobile App](https://apps.apple.com/us/app/flipperforce/id6746277826)
+
+        * [Android Mobile App](https://play.google.com/store/apps/details?hl=en_US&id=com.flipperforce)'
+      summary: Create
+      tags:
+      - Project Receipts
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1DocumentsReceiptCreateRequest'
+      responses:
+        '201':
+          description: '`Receipt`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Receipt'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+  /project/{projectV1}/receipts/{receiptUuid}:
+    patch:
+      operationId: v1.project.receipts.update
+      description: Update metadata of a Project Receipt.
+      summary: Update
+      tags:
+      - Project Receipts
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: receiptUuid
+        in: path
+        required: true
+        description: Receipt UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1DocumentsReceiptUpdateRequest'
+      responses:
+        '200':
+          description: '`Receipt`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Receipt'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+    delete:
+      operationId: v1.project.receipts.delete
+      description: Delete a Project Receipt.
+      summary: Delete
+      tags:
+      - Project Receipts
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: receiptUuid
+        in: path
+        required: true
+        description: Receipt UUID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+components:
+  responses:
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+  schemas:
+    Receipt:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        created_at:
+          type: string
+          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          description: 'Date when the vendor issued the Receipt. Such as when it was
+
+            printed at the vendor''s point of sale. Date string formatted as
+
+            YYYY-MM-DD such as `2025-07-23`.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any additional details about this Receipt
+        from_client:
+          type: string
+          description: 'Details on where this Receipt originated, such as the web application,
+
+            mobile application, or external integration.'
+        file:
+          description: Receipt file
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - created_at
+      - issue_date
+      - notes
+      - from_client
+      - file
+      title: Receipt
+    File:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        name:
+          type: string
+          description: 'Short human-readable description to distinguish this file from
+
+            other files across the entire Project'
+        size:
+          type: integer
+          description: File size in bytes
+        type:
+          type: string
+          description: 'Roughly what kind of file is available. Such as `pdf` or `jpeg`.
+
+            Note that this is not a file MIME-type, but can be used by
+
+            clients to change how they handle the file.'
+        source_url:
+          type: object
+          description: URLs to full versions of the file
+          properties:
+            view:
+              type: string
+              description: URL to view the file on the device, as an inline HTTP response
+            download:
+              type: string
+              description: URL to download the file, as a download HTTP response
+          required:
+          - view
+          - download
+        preview_url:
+          type: object
+          description: 'URLs to view smaller versions of the file''s contents. Images
+
+            will return a smaller version of the image itself. Documents
+
+            will return a placeholder document image and not the file''s
+
+            actual contents.'
+          properties:
+            thumbnail:
+              type: string
+              description: Up to approximately 300px wide
+            large:
+              type: string
+              description: Up to approximately 600px wide
+          required:
+          - thumbnail
+          - large
+      required:
+      - uuid
+      - name
+      - size
+      - type
+      - source_url
+      - preview_url
+      title: File
+    V1DocumentsReceiptUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: '(Optional) Short description of the file, such as its filename or
+
+            describing what items were purchased. Available in response as
+
+            `file.name`'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+
+            the date printed on the Receipt given at the point of sale.
+
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Details not captured in other fields.
+      title: V1DocumentsReceiptUpdateRequest
+    V1DocumentsReceiptCreateRequest:
+      type: object
+      properties:
+        intent_uuid:
+          type: string
+          description: '[Upload Intent](/operations/v1.workspace.upload-intent.create) UUID for the successfully uploaded Receipt file.'
+        name:
+          type:
+          - string
+          - 'null'
+          description: '(Optional) Short description of the file, such as its filename or
+
+            describing what items were purchased. Available in response as
+
+            `file.name`'
+          maxLength: 191
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+
+            the date printed on the Receipt given at the point of sale.
+
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Details not captured in other fields.
+          maxLength: 10000
+      required:
+      - intent_uuid
+      title: V1DocumentsReceiptCreateRequest
+  securitySchemes:
+    PublicApiBearerAuth:
+      type: http
+      description: 'Use the Public API key provided by FlipperForce as a Bearer token. Send the key exactly as provided in the Authorization header: `Authorization: Bearer <api-key>`.'
+      scheme: bearer
+      bearerFormat: FlipperForce Public API key

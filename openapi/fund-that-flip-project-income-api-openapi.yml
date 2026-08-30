@@ -1,0 +1,849 @@
+openapi: 3.2.0
+info:
+  title: FlipperForce Public Project Income API
+  version: 0.0.10
+  description: '# FlipperForce Public API • Version 1
+
+
+    ## How do I request an API key?
+
+
+    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
+
+    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
+
+
+    ## Support / Help
+
+
+    * Email: support@flipperforce.com
+
+    * Chat: https://tools.flipperforce.com/
+
+
+    ## Rate Limits
+
+
+    If you encounter a `429 Too Many Requests` response, you have submitted too many
+
+    requests in a short amount of time. Please decrease the amount or frequency of
+
+    your requests and try again.
+
+
+    ## Changelog
+
+
+    ### July 25, 2026 - v0.0.10
+
+
+    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
+
+
+    ### July 23, 2026 - v0.0.9
+
+
+    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
+
+
+    ### July 21, 2026 - v0.0.8
+
+
+    * OpenAPI spec documents Bearer Token authentication strategy
+
+
+    ### June 22, 2026 - v0.0.6
+
+
+    * Add support for [Project Income](/operations/v1.project.income.list).
+
+    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
+
+
+    ### June 21, 2026 - v0.0.4
+
+
+    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
+
+    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
+
+
+    ### June 4, 2026 - v0.0.3
+
+
+    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
+
+
+    ### June 2, 2026 - v0.0.2
+
+
+    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
+
+    * Add support for [Companies](/operations/v1.workspace.companies.list).
+
+    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
+
+
+    ### September 3, 2025 - v0.0.1
+
+
+    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
+
+
+    ### August 13, 2025
+
+
+    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
+
+    '
+servers:
+- url: https://tools.flipperforce.com/api/v1
+security:
+- PublicApiBearerAuth: []
+tags:
+- name: Project Income
+paths:
+  /project/{projectV1}/income/list:
+    get:
+      operationId: v1.project.income.list
+      description: 'List Income records within a Project.
+
+
+        Income is visible in the web application user interface in the Project Income Tracker tool.
+
+
+        ## Reporting on Total Amounts
+
+
+        See the `data.totals` property in the response for the sum total of Income before pagination.
+
+
+        * `data.totals.amount` - Sum of all `amount` values for all matching Income records
+
+
+        The total number of records matching the query parameters is in `meta.total_count`.
+
+
+        ## Filter by date range
+
+
+        Supports limiting to date ranges by using a combination of these operators:
+
+
+        * date[gt] - greater than
+
+        * date[gte] - greater than or equal to
+
+        * date[lt] - less than
+
+        * date[lte] - less than or equal to
+
+
+        ## Example: Year-to-Date Income
+
+
+        Request using a year-to-date range, then read the returned totals.
+
+
+        For example, Income year-to-date through June 19, 2026.
+
+
+        * date[gte]=2026-01-01
+
+        * date[lte]=2026-06-19
+
+
+        ```text
+
+        GET /api/v1/project/{projectV1}/income/list?date[gte]=2026-01-01&date[lte]=2026-06-19
+
+        ```
+
+
+        ## Example: Rental Income
+
+
+        ```text
+
+        GET /api/v1/project/{projectV1}/income/list?types[]=rental
+
+        ```'
+      summary: List
+      tags:
+      - Project Income
+      parameters:
+      - name: per_page
+        in: query
+        description: Number of records to return at a time.
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+      - name: date
+        in: query
+        description: Income Date in `YYYY-MM-DD` format for exact matching. Supports date ranges via by using operators like `date[gt]` (greater than), `date[gte]` (greater than or equal to), `date[lt]` (less than), and `date[lte]` (less than or equal to).
+        schema:
+          type: string
+      - name: types[]
+        in: query
+        description: 'Income type. Allowed values: `rental`, `resale`, `other`.'
+        schema:
+          type: array
+          items:
+            type: string
+      - name: cursor
+        in: query
+        schema:
+          type: string
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: date[gt]
+        in: query
+        description: 'Return Income records after this date, excluding the given date. Format: `YYYY-MM-DD`.'
+        schema:
+          type: string
+          format: YYYY-MM-DD
+      - name: date[gte]
+        in: query
+        description: 'Return Income records on or after this date. Format: `YYYY-MM-DD`.'
+        schema:
+          type: string
+          format: YYYY-MM-DD
+      - name: date[lt]
+        in: query
+        description: 'Return Income records before this date, excluding the given date. Format: `YYYY-MM-DD`.'
+        schema:
+          type: string
+          format: YYYY-MM-DD
+      - name: date[lte]
+        in: query
+        description: 'Return Income records on or before this date. Format: `YYYY-MM-DD`.'
+        schema:
+          type: string
+          format: YYYY-MM-DD
+      responses:
+        '200':
+          description: Paginated set of `Income`
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Income_List'
+                  links:
+                    type: object
+                    properties:
+                      first:
+                        type:
+                        - string
+                        - 'null'
+                      last:
+                        type:
+                        - string
+                        - 'null'
+                      prev:
+                        type:
+                        - string
+                        - 'null'
+                      next:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - first
+                    - last
+                    - prev
+                    - next
+                  meta:
+                    type: object
+                    properties:
+                      path:
+                        type:
+                        - string
+                        - 'null'
+                        description: Base path for paginator generated URLs.
+                      per_page:
+                        type: integer
+                        description: Number of items shown per page.
+                        minimum: 0
+                      next_cursor:
+                        type:
+                        - string
+                        - 'null'
+                        description: The "cursor" that points to the next set of items.
+                      prev_cursor:
+                        type:
+                        - string
+                        - 'null'
+                        description: The "cursor" that points to the previous set of items.
+                      total_count:
+                        type: integer
+                        description: Number of records matching the request filters before pagination.
+                    required:
+                    - path
+                    - per_page
+                    - next_cursor
+                    - prev_cursor
+                    - total_count
+                required:
+                - data
+                - links
+                - meta
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+  /project/{projectV1}/income/create:
+    post:
+      operationId: v1.project.income.create
+      description: 'Create an Income record to track income received for a Project.
+
+
+        Income is visible in the web application user interface in the Project Income Tracker tool.'
+      summary: Create
+      tags:
+      - Project Income
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Create_Income_Request'
+      responses:
+        '201':
+          description: '`Income`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Income'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+  /project/{projectV1}/income/{incomeUuid}:
+    get:
+      operationId: v1.project.income.show
+      description: Retrieve a single Income record.
+      summary: Show
+      tags:
+      - Project Income
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: incomeUuid
+        in: path
+        required: true
+        description: Income UUID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: '`Income`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Income'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+    patch:
+      operationId: v1.project.income.update
+      description: Update a single Income record.
+      summary: Update
+      tags:
+      - Project Income
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: incomeUuid
+        in: path
+        required: true
+        description: Income UUID
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Update_Income_Request'
+      responses:
+        '200':
+          description: '`Income`'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Income'
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '422':
+          $ref: '#/components/responses/ValidationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+    delete:
+      operationId: v1.project.income.delete
+      description: Delete an Income record.
+      summary: Delete
+      tags:
+      - Project Income
+      parameters:
+      - name: projectV1
+        in: path
+        required: true
+        description: Project UUID
+        schema:
+          type: string
+          format: uuid
+      - name: incomeUuid
+        in: path
+        required: true
+        description: Income UUID
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+        '403':
+          description: When the authenticated User Account is forbidden from accessing the content or software features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Human-readable description of why access was not allowed
+                  reason:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Machine-readable code for why access was not allowed. Possible values:
+
+                      * `UNKNOWN` - Access Forbidden
+
+                      * `UNSUPPORTED_CLIENT` - Unsupported client.
+
+                      * `SUBSCRIPTION_MISSING` - A Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PAYMENT_DUE` - A paid Subscription is required. Visit the application website to manage the Subscription.
+
+                      * `SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE` - The Subscription Plan does not support using this Software Feature.
+
+                      * `FEATURE_ACCESS_DENIED` - Your account within this Workspace is not allowed to use this Software Feature. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ACCESS_DENIED` - Your account is not allowed to access this Project. Contact the Workspace Owner to request access.
+
+                      * `PROJECT_ARCHIVED` - This Project is Archived and cannot be accessed. You must restore this Project to Active Status to use it.
+
+                      * `WORKSPACE_ACCESS_DENIED` - You do not have an account within this Workspace.
+
+                      * `WORKSPACE_SELECTION_MISSING` - You must select a Workspace before making this request.
+
+                      '
+                    enum:
+                    - UNKNOWN
+                    - UNSUPPORTED_CLIENT
+                    - SUBSCRIPTION_MISSING
+                    - SUBSCRIPTION_PAYMENT_DUE
+                    - SUBSCRIPTION_PLAN_UNSUPPORTED_FEATURE
+                    - FEATURE_ACCESS_DENIED
+                    - PROJECT_ACCESS_DENIED
+                    - PROJECT_ARCHIVED
+                    - WORKSPACE_ACCESS_DENIED
+                    - WORKSPACE_SELECTION_MISSING
+                    - null
+components:
+  responses:
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+  schemas:
+    Create_Income_Request:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Required. Date this income was received in `YYYY-MM-DD` format.
+        description:
+          type: string
+          description: Required. User-facing description shown in the Income Tracker table.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Income classification. Allowed values are `rental`, `resale`, and `other`.
+          enum:
+          - rental
+          - resale
+          - other
+          - null
+        amount:
+          type: number
+          description: Required. Income amount in dollars. Such as `1234.56`.
+      required:
+      - date
+      - description
+      - amount
+      title: Create Income Request
+    Income:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier.
+        created_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp when Income was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp when Income was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        date:
+          type:
+          - string
+          - 'null'
+          description: Date this income was received in `YYYY-MM-DD` format.
+        description:
+          type: string
+          description: User-facing description shown in the Income Tracker table.
+        type:
+          type:
+          - string
+          - 'null'
+          description: 'Income classification. One of: `rental`, `resale`, `other`.'
+        amount:
+          type:
+          - number
+          - 'null'
+          description: Income amount in dollars. Such as `1234.56`.
+      required:
+      - uuid
+      - created_at
+      - updated_at
+      - date
+      - description
+      - type
+      - amount
+      title: Income
+    Income_List:
+      type: object
+      properties:
+        totals:
+          type: object
+          description: Sums across all Income records matching the request filters, before pagination.
+          properties:
+            amount:
+              type: number
+          required:
+          - amount
+        income:
+          type: array
+          description: Current page of Income records.
+          items:
+            $ref: '#/components/schemas/Income'
+      required:
+      - totals
+      - income
+      title: Income List
+    Update_Income_Request:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date this income was received in `YYYY-MM-DD` format.
+        description:
+          type: string
+          description: User-facing description shown in the Income Tracker table.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Income classification. Allowed values are `rental`, `resale`, and `other`.
+          enum:
+          - rental
+          - resale
+          - other
+          - null
+        amount:
+          type: number
+          description: Income amount in dollars. Such as `1234.56`.
+      title: Update Income Request
+  securitySchemes:
+    PublicApiBearerAuth:
+      type: http
+      description: 'Use the Public API key provided by FlipperForce as a Bearer token. Send the key exactly as provided in the Authorization header: `Authorization: Bearer <api-key>`.'
+      scheme: bearer
+      bearerFormat: FlipperForce Public API key

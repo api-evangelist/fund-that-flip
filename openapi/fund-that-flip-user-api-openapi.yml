@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: FlipperForce Public User API
+  version: 0.0.10
+  description: '# FlipperForce Public API • Version 1
+
+
+    ## How do I request an API key?
+
+
+    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
+
+    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
+
+
+    ## Support / Help
+
+
+    * Email: support@flipperforce.com
+
+    * Chat: https://tools.flipperforce.com/
+
+
+    ## Rate Limits
+
+
+    If you encounter a `429 Too Many Requests` response, you have submitted too many
+
+    requests in a short amount of time. Please decrease the amount or frequency of
+
+    your requests and try again.
+
+
+    ## Changelog
+
+
+    ### July 25, 2026 - v0.0.10
+
+
+    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
+
+
+    ### July 23, 2026 - v0.0.9
+
+
+    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
+
+
+    ### July 21, 2026 - v0.0.8
+
+
+    * OpenAPI spec documents Bearer Token authentication strategy
+
+
+    ### June 22, 2026 - v0.0.6
+
+
+    * Add support for [Project Income](/operations/v1.project.income.list).
+
+    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
+
+
+    ### June 21, 2026 - v0.0.4
+
+
+    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
+
+    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
+
+
+    ### June 4, 2026 - v0.0.3
+
+
+    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
+
+
+    ### June 2, 2026 - v0.0.2
+
+
+    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
+
+    * Add support for [Companies](/operations/v1.workspace.companies.list).
+
+    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
+
+
+    ### September 3, 2025 - v0.0.1
+
+
+    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
+
+
+    ### August 13, 2025
+
+
+    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
+
+    '
+servers:
+- url: https://tools.flipperforce.com/api/v1
+security:
+- PublicApiBearerAuth: []
+tags:
+- name: User
+paths:
+  /user/account:
+    get:
+      operationId: v1.user.account
+      description: 'Details about the currently authenticated User, including their
+
+        available Workspaces and Permissions.'
+      summary: Account
+      tags:
+      - User
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user_account:
+                        description: Authenticated User's account details
+                        $ref: '#/components/schemas/User_Account'
+                      chat_hash:
+                        type:
+                        - string
+                        - 'null'
+                        description: 'Verify the User''s identity with chat support.
+
+                          This field is only available when using an official client.'
+                    required:
+                    - user_account
+                    - chat_hash
+                required:
+                - data
+        '401':
+          $ref: '#/components/responses/AuthenticationException'
+components:
+  schemas:
+    Workspace:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        owner:
+          description: 'User that maintains the Workspace''s Subscription and highest
+
+            level permissions.'
+          $ref: '#/components/schemas/User'
+        company:
+          type:
+          - object
+          - 'null'
+          description: Company Profile for this Workspace.
+          properties:
+            name:
+              type:
+              - string
+              - 'null'
+            email:
+              type:
+              - string
+              - 'null'
+            phone:
+              type:
+              - string
+              - 'null'
+            website:
+              type:
+              - string
+              - 'null'
+          required:
+          - name
+          - email
+          - phone
+          - website
+        role:
+          type: string
+          description: 'What account type the User holds within this Workspace.
+
+            Such as `Owner`, `Team Admin`, `Team Member`'
+        user_permissions:
+          type: array
+          description: 'Software Features the User is allowed to use when working within
+
+            the Workspace. Varies according to the Workspace''s Subscription Plan
+
+            and how the User''s account is configured in the Workspace.
+
+            Please contact us for a complete list of possible values.'
+          items:
+            type: string
+        project_stages:
+          type: object
+          description: 'Projects within a Workspace can be assigned to one of these
+
+            Project Stage keys. Keys are the machine-readable values
+
+            accepted by the API. Values are the human-readable text for
+
+            that Stage. A Project''s current Stage is returned via the
+
+            Project schema as field `stage`.
+
+
+            Workspace Owners can customize the human-readable values using
+
+            the web application, but the machine-readable values cannot be
+
+            changed. For example, if the human-readable text for
+
+            `pending_purchase` was customized to be
+
+            "Evaluating Deal" then the API still requires submitting
+
+            `pending_purchase` to move the Project to the Evaluating Deal
+
+            Stage.'
+          additionalProperties:
+            type: string
+      required:
+      - uuid
+      - owner
+      - company
+      - role
+      - user_permissions
+      - project_stages
+      title: Workspace
+    User_Account:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        workspaces:
+          type: array
+          description: Each Workspace the User is a member of
+          items:
+            $ref: '#/components/schemas/Workspace'
+      required:
+      - user
+      - workspaces
+      title: User Account
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type:
+          - string
+          - 'null'
+          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
+      required:
+      - uuid
+      - first_name
+      - last_name
+      - email
+      - avatar
+      title: User
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+  securitySchemes:
+    PublicApiBearerAuth:
+      type: http
+      description: 'Use the Public API key provided by FlipperForce as a Bearer token. Send the key exactly as provided in the Authorization header: `Authorization: Bearer <api-key>`.'
+      scheme: bearer
+      bearerFormat: FlipperForce Public API key
