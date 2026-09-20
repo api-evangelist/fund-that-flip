@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 1
+edge_count: 2
 edges:
 - tag: Project
   spec_file: fund-that-flip-project-api-openapi.yml
@@ -23,3 +23,13 @@ edges:
   reason: Lifecycle CRUD over rehab projects with pipeline stage and strategy, i.e. project records used
     for execution tracking. Best fits generic Project Management; construction-specific sub-capabilities
     are not evidenced by these operations.
+- tag: Project Updates
+  spec_file: fund-that-flip-project-updates-api-openapi.yml
+  capability_id: BC-900.30
+  capability_id_l1: BC-900
+  capability_name: Project Management
+  confidence: 0.7
+  evidence: POST /project/{projectV1}/updates/create — schemas V1ProjectProgressUpdateRequest, Project_Update
+  reason: Creation and maintenance of progress updates on a project (request schema is explicitly 'ProjectProgressUpdate'),
+    i.e. project tracking and status reporting within project execution.
+  recovered_from: vertical-banking-capital-markets-edges.json
