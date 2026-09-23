@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -106,7 +16,132 @@ paths:
   /workspace/{workspace}/activity-log/list:
     get:
       operationId: v1.workspace.activity-log.list
-      description: "Activity Log is a record of what actions have been performed within a Workspace by its Users. This is the best way to discover recent activity that has occurred in a Workspace.\n\nWhile not every action in the software is logged here, it includes important activity across most software tools.\n\nResults use cursor-based pagination and are ordered by `performed_at` with the most recent displaying first. Use `links.next` to fetch the next page of results.\n\nThe total number of records matching the search filter parameters is returned in `meta.total_count` and is useful for reporting purposes.\n\n## Search Filters\n\nUse the [Activity Log filters endpoint](/operations/v1.workspace.activity-log.filters) to discover Projects, Users and Activity Types usable as filter values.\n\nSubmit filters as query string parameters:\n\n* performed_at\n* project_uuids\n* user_uuids\n* activity_types\n\nFilters are additive and are applied using AND semantics:\n\n```text\n(filter1 AND filter2 AND ...)\n```\n\nFilter values `project_uuids`, `user_uuids`, and `activity_types` use OR semantics:\n\n```text\n(\n    project_uuids IN (...)\n    AND user_uuids IN (...)\n    AND activity_types IN (...)\n)\n```\n\n## Search Filters - performed_at for querying by time\n\n`performed_at` format follows RFC 3339 using second precision and a timezone. For example, for example `2026-06-01T00:00:00Z`.\n\nTimes in UTC timezone end in `Z`. Specify timezones by using UTC offsets such as `2026-05-31T19:00:00-04:00` for Eastern Daylight Time.\n\nEach timestamp requires a timezone.\n\nSearch values are normalized to UTC and results are returned as UTC.\n\n## Example: Filter by multiple Projects and Activity Types\n\n`project_uuids[]` and `activity_types[]` filters support finding multiple values. Like `(project1 OR project2) AND (type1 OR type2)`.\n\nYou can find logs associated with multiple Project when the Activity Type is either `project.created` or `project.stage.updated`.\n\n```text\nGET /api/v1/workspace/{workspace}/activity-log/list?project_uuids[]=9d0e1f23-4567-489a-bcde-f0123456789a&project_uuids[]=dff54a48-2113-44c5-be0c-a3a9f84c25e7&activity_types[]=project.created&activity_types[]=project.stage.updated\n```\n\n## Example: Find activity performed at or after July 1, 2026 at 12:00 a.m. EDT\n\nSet an inclusive lower bound using `performed_at[gte]` (greater-than or equal to). `-04:00` is the timezone offset for Eastern Daylight Time:\n\n```text\nGET /api/v1/workspace/{workspace}/activity-log/list?performed_at[gte]=2026-07-01T00:00:00-04:00\n```\n\n## Example: Find activity performed before July 1, 2026 at 12:00 a.m. EDT\n\nSet an exclusive upper bound using `performed_at[lt]` (less-than). `-04:00` is the timezone offset for Eastern Daylight Time:\n\n```text\nGET /api/v1/workspace/{workspace}/activity-log/list?performed_at[lt]=2026-07-01T00:00:00-04:00\n```\n\n## Example: Find activity performed in July 2026 (EDT)\n\nSet a lower bound (`performed_at[gte]`) and upper bound (`performed_at[lt]`) to find activity within a single month. Notice the upper bound (exclusive) is next month August 1 at 12:00am:\n\n```text\nGET /api/v1/workspace/{workspace}/activity-log/list?performed_at[gte]=2026-07-01T00:00:00-04:00&performed_at[lt]=2026-08-01T00:00:00-04:00\n```"
+      description: 'Activity Log is a record of what actions have been performed within a Workspace by its Users. This is the best way to discover recent activity that has occurred in a Workspace.
+
+
+        While not every action in the software is logged here, it includes important activity across most software tools.
+
+
+        Results use cursor-based pagination and are ordered by `performed_at` with the most recent displaying first. Use `links.next` to fetch the next page of results.
+
+
+        The total number of records matching the search filter parameters is returned in `meta.total_count` and is useful for reporting purposes.
+
+
+        ## Search Filters
+
+
+        Use the Activity Log filters endpoint to discover Projects, Users and Activity Types usable as filter values.
+
+
+        Submit filters as query string parameters:
+
+
+        * performed_at
+
+        * project_uuids
+
+        * user_uuids
+
+        * activity_types
+
+
+        Filters are additive and are applied using AND semantics:
+
+
+        ```text
+
+        (filter1 AND filter2 AND ...)
+
+        ```
+
+
+        Filter values `project_uuids`, `user_uuids`, and `activity_types` use OR semantics:
+
+
+        ```text
+
+        (
+
+        project_uuids IN (...)
+
+        AND user_uuids IN (...)
+
+        AND activity_types IN (...)
+
+        )
+
+        ```
+
+
+        ## Search Filters - performed_at for querying by time
+
+
+        `performed_at` format follows RFC 3339 using second precision and a timezone. For example, for example `2026-06-01T00:00:00Z`.
+
+
+        Times in UTC timezone end in `Z`. Specify timezones by using UTC offsets such as `2026-05-31T19:00:00-04:00` for Eastern Daylight Time.
+
+
+        Each timestamp requires a timezone.
+
+
+        Search values are normalized to UTC and results are returned as UTC.
+
+
+        ## Example: Filter by multiple Projects and Activity Types
+
+
+        `project_uuids[]` and `activity_types[]` filters support finding multiple values. Like `(project1 OR project2) AND (type1 OR type2)`.
+
+
+        You can find logs associated with multiple Project when the Activity Type is either `project.created` or `project.stage.updated`.
+
+
+        ```text
+
+        GET /api/v1/workspace/{workspace}/activity-log/list?project_uuids[]=9d0e1f23-4567-489a-bcde-f0123456789a&project_uuids[]=dff54a48-2113-44c5-be0c-a3a9f84c25e7&activity_types[]=project.created&activity_types[]=project.stage.updated
+
+        ```
+
+
+        ## Example: Find activity performed at or after July 1, 2026 at 12:00 a.m. EDT
+
+
+        Set an inclusive lower bound using `performed_at[gte]` (greater-than or equal to). `-04:00` is the timezone offset for Eastern Daylight Time:
+
+
+        ```text
+
+        GET /api/v1/workspace/{workspace}/activity-log/list?performed_at[gte]=2026-07-01T00:00:00-04:00
+
+        ```
+
+
+        ## Example: Find activity performed before July 1, 2026 at 12:00 a.m. EDT
+
+
+        Set an exclusive upper bound using `performed_at[lt]` (less-than). `-04:00` is the timezone offset for Eastern Daylight Time:
+
+
+        ```text
+
+        GET /api/v1/workspace/{workspace}/activity-log/list?performed_at[lt]=2026-07-01T00:00:00-04:00
+
+        ```
+
+
+        ## Example: Find activity performed in July 2026 (EDT)
+
+
+        Set a lower bound (`performed_at[gte]`) and upper bound (`performed_at[lt]`) to find activity within a single month. Notice the upper bound (exclusive) is next month August 1 at 12:00am:
+
+
+        ```text
+
+        GET /api/v1/workspace/{workspace}/activity-log/list?performed_at[gte]=2026-07-01T00:00:00-04:00&performed_at[lt]=2026-08-01T00:00:00-04:00
+
+        ```'
       summary: List
       tags:
       - Activity Log
@@ -286,7 +321,7 @@ paths:
   /workspace/{workspace}/activity-log/filters:
     get:
       operationId: v1.workspace.activity-log.filters
-      description: 'List the Project, User, and Activity Type values accepted by the [Activity Log: List](/operations/v1.workspace.activity-log.list) endpoint.
+      description: 'List the Project, User, and Activity Type values accepted by the Activity Log: List endpoint.
 
 
         Projects returned are those with at least 1 record in the Activity Log.
@@ -371,143 +406,7 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   schemas:
-    Activity_Log_List:
-      type: array
-      items:
-        $ref: '#/components/schemas/Activity_Log'
-      title: Activity Log List
-    Activity_Log_Filters:
-      type: object
-      properties:
-        projects:
-          type: array
-          description: Projects referenced by visible Activity Log history and available to the account.
-          items:
-            $ref: '#/components/schemas/Activity_Log_Project_Filter'
-        users:
-          type: array
-          description: Current Workspace Users and historical actors, including current Users without Activity Log history.
-          items:
-            $ref: '#/components/schemas/Activity_Log_User_Filter'
-        activity_types:
-          type: array
-          description: Activity Type values present in visible Workspace history and accepted by `activity_types[]`.
-          items:
-            type: string
-      required:
-      - projects
-      - users
-      - activity_types
-      title: Activity Log Filters
-    Activity_Log_Target:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Stable machine-readable resource type, such as `project` or `project_status`.
-        uuid:
-          type:
-          - string
-          - 'null'
-          description: Public resource identifier, or null when the target does not support locating by UUID in the API.
-        name:
-          type:
-          - string
-          - 'null'
-          description: Display name captured for the activity.
-        links:
-          description: URLs for Public API resources related to this target.
-          $ref: '#/components/schemas/Activity_Log_Target_Links'
-      required:
-      - type
-      - uuid
-      - name
-      - links
-      title: Activity Log Target
-    Activity_Log_Project_Filter:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public Project identifier accepted by `project_uuids[]`.
-        label:
-          type: string
-          description: Project name.
-      required:
-      - uuid
-      - label
-      title: Activity Log Project Filter
-    Activity_Log_Project_Context:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public Project identifier.
-        name:
-          type: string
-          description: Project display name.
-      required:
-      - uuid
-      - name
-      title: Activity Log Project Context
-    Activity_Log_Actor:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public User identifier.
-        name:
-          type: string
-          description: User display name.
-      required:
-      - uuid
-      - name
-      title: Activity Log Actor
-    Activity_Log_Target_Links:
-      type: object
-      properties:
-        self:
-          type:
-          - string
-          - 'null'
-          description: GET URL for the target, or null when no GET-by-UUID endpoint is available.
-      required:
-      - self
-      title: Activity Log Target Links
     Activity_Log:
       type: object
       properties:
@@ -553,6 +452,86 @@ components:
       - targets
       - details
       title: Activity Log
+    Activity_Log_Target:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Stable machine-readable resource type, such as `project` or `project_status`.
+        uuid:
+          type:
+          - string
+          - 'null'
+          description: Public resource identifier, or null when the target does not support locating by UUID in the API.
+        name:
+          type:
+          - string
+          - 'null'
+          description: Display name captured for the activity.
+        links:
+          description: URLs for Public API resources related to this target.
+          $ref: '#/components/schemas/Activity_Log_Target_Links'
+      required:
+      - type
+      - uuid
+      - name
+      - links
+      title: Activity Log Target
+    Activity_Log_Target_Links:
+      type: object
+      properties:
+        self:
+          type:
+          - string
+          - 'null'
+          description: GET URL for the target, or null when no GET-by-UUID endpoint is available.
+      required:
+      - self
+      title: Activity Log Target Links
+    Activity_Log_Actor:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public User identifier.
+        name:
+          type: string
+          description: User display name.
+      required:
+      - uuid
+      - name
+      title: Activity Log Actor
+    Activity_Log_List:
+      type: array
+      items:
+        $ref: '#/components/schemas/Activity_Log'
+      title: Activity Log List
+    Activity_Log_Project_Context:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Project identifier.
+        name:
+          type: string
+          description: Project display name.
+      required:
+      - uuid
+      - name
+      title: Activity Log Project Context
+    Activity_Log_Project_Filter:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Project identifier accepted by `project_uuids[]`.
+        label:
+          type: string
+          description: Project name.
+      required:
+      - uuid
+      - label
+      title: Activity Log Project Filter
     Activity_Log_User_Filter:
       type: object
       properties:
@@ -566,6 +545,62 @@ components:
       - uuid
       - label
       title: Activity Log User Filter
+    Activity_Log_Filters:
+      type: object
+      properties:
+        projects:
+          type: array
+          description: Projects referenced by visible Activity Log history and available to the account.
+          items:
+            $ref: '#/components/schemas/Activity_Log_Project_Filter'
+        users:
+          type: array
+          description: Current Workspace Users and historical actors, including current Users without Activity Log history.
+          items:
+            $ref: '#/components/schemas/Activity_Log_User_Filter'
+        activity_types:
+          type: array
+          description: Activity Type values present in visible Workspace history and accepted by `activity_types[]`.
+          items:
+            type: string
+      required:
+      - projects
+      - users
+      - activity_types
+      title: Activity Log Filters
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

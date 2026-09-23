@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -106,7 +16,100 @@ paths:
   /workspace/{workspace}/upload-intent:
     post:
       operationId: v1.workspace.upload-intent.create
-      description: "Creating an Upload Intent is Step 1 in uploading files.\n\nSubmit metadata about the file you intend to upload. The Response\nincludes a Signed URL, HTTP Method, and HTTP Headers where your client\nwill be temporarily authorized to upload the file. Use the Response data\nto construct a file upload request in Step 2.\n\nStep 2 is using the Signed URL, Method, and Headers from Step 1 to upload\nthe file to file storage:\n\n```\nx-amz-acl: private\nContent-MD5: rz1TrXzmoB4WmdeUde+CIQ==\nContent-Type: image/png\n... above are example headers from an Upload Intent ...\nPOST https://the-signed-url-here\nraw-binary-file-data-here\n```\n\nStep 3 after uploading succeeds is to call the next API for the specific\nuse case you uploaded the file. Each use case has its own API call where\nyou must supply the `uuid` returned in Step 1, allowing Step 3 to find\nand reference the uploaded file:\n\n* [Create a Project Receipt](/operations/v1.project.receipts.create)\n* [Create a Photo Log Photo](/operations/v1.project.photo-log.create)\n* [Create a Project Update Photo](/operations/v1.project.updates.photos.create)\n\n### Response from Signed URL: Response Codes\n\n| Code | Description |\n| - | - |\n| 200 OK        | File successfully received and satisfied all validation checks. No body content. |\n| 400 Bad Request | Perhaps the uploaded file's MD5 checksum did not match what was given in the Upload Intent. Retry by requesting a new Upload Intent and signed URL. |\n| 403 Forbidden | The signed URL has expired. Retry by request a new Upload Intent and signed URL. |\n\n### Response from Signed URL\n\nThe Signed URL response defaults to returning XML. If you want JSON,\nsubmit a header `Accept: application/json`.\n\nExample Error Response Body when the Content-MD5 header does not match\nwhat was submitted in the Request Body:\n\n```\n{\n  \"Code\": \"BadDigest\",\n  \"Message\": \"\",\n  \"BucketName\": \"flipperforce-prod\",\n  \"RequestId\": \"tx000007027848ea442f7f9-006839cfe7-1060947b4-nyc3c\",\n  \"HostId\": \"1060947b4-nyc3c-nyc3-zg03\"\n}\n```"
+      description: 'Creating an Upload Intent is Step 1 in uploading files.
+
+
+        Submit metadata about the file you intend to upload. The Response
+
+        includes a Signed URL, HTTP Method, and HTTP Headers where your client
+
+        will be temporarily authorized to upload the file. Use the Response data
+
+        to construct a file upload request in Step 2.
+
+
+        Step 2 is using the Signed URL, Method, and Headers from Step 1 to upload
+
+        the file to file storage:
+
+
+        ```
+
+        x-amz-acl: private
+
+        Content-MD5: rz1TrXzmoB4WmdeUde+CIQ==
+
+        Content-Type: image/png
+
+        ... above are example headers from an Upload Intent ...
+
+        POST https://the-signed-url-here
+
+        raw-binary-file-data-here
+
+        ```
+
+
+        Step 3 after uploading succeeds is to call the next API for the specific
+
+        use case you uploaded the file. Each use case has its own API call where
+
+        you must supply the `uuid` returned in Step 1, allowing Step 3 to find
+
+        and reference the uploaded file:
+
+
+        * Create a Project Receipt
+
+        * Create a Photo Log Photo
+
+        * Create a Project Update Photo
+
+
+        ### Response from Signed URL: Response Codes
+
+
+        | Code | Description |
+
+        | - | - |
+
+        | 200 OK | File successfully received and satisfied all validation checks. No body content. |
+
+        | 400 Bad Request | Perhaps the uploaded file''s MD5 checksum did not match what was given in the Upload Intent. Retry by requesting a new Upload Intent and signed URL. |
+
+        | 403 Forbidden | The signed URL has expired. Retry by request a new Upload Intent and signed URL. |
+
+
+        ### Response from Signed URL
+
+
+        The Signed URL response defaults to returning XML. If you want JSON,
+
+        submit a header `Accept: application/json`.
+
+
+        Example Error Response Body when the Content-MD5 header does not match
+
+        what was submitted in the Request Body:
+
+
+        ```
+
+        {
+
+        "Code": "BadDigest",
+
+        "Message": "",
+
+        "BucketName": "flipperforce-prod",
+
+        "RequestId": "tx000007027848ea442f7f9-006839cfe7-1060947b4-nyc3c",
+
+        "HostId": "1060947b4-nyc3c-nyc3-zg03"
+
+        }
+
+        ```'
       summary: Create Upload Intent
       tags:
       - Attachment Upload
@@ -231,18 +234,6 @@ paths:
                     - null
 components:
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -263,6 +254,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   schemas:
     Upload_Intent:
       type: object

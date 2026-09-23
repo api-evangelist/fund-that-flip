@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -112,7 +22,7 @@ paths:
         ## Reporting on Total Amounts
 
 
-        Use the [Project Expenses: Line Items - List API](/operations/v1.project.expense-line-items.list) to query for total expense amounts and build expense reports.
+        Use the Project Expenses: Line Items - List API to query for total expense amounts and build expense reports.
 
 
         ## Finding Transactions without a Receipt
@@ -278,7 +188,7 @@ paths:
   /project/{projectV1}/expense-transactions/create:
     post:
       operationId: v1.project.expense-transactions.create
-      description: "Create an Expense Transaction with Line Items to track your expenses. Associate them with a [Company](/operations/v1.workspace.companies.list), [Expense Category](/operations/v1.project.expense-categories.list) and [Expense Account](/operations/v1.workspace.expense-accounts.list) to then use reporting features.\n\nExpenses are visible in the web application user interface in the Project Expense Tracker tool.\n\n## Reporting on Transactions and Expenses\n\nA Transaction has many Expense Line Items. Use the [Project Expenses: Line Items API](/operations/v1.project.expense-line-items.list) for reporting purposes like:\n\n* Year-to-Date Totals\n* Per Company Totals\n* Per Expense Category Totals\n* Per Expense Account Totals\n\n## Understanding FlipperForce expense tracking concepts\n\nThink of each Expense Transaction as starting from the receipt/invoice you receive from a vendor, or as each charge on a credit card statement.\n\nEach purchase or payment is stored as an Expense Transaction. And each item or service purchased on that transaction (like items on a receipt) is stored as an Expense Line Item on that Expense Transaction.\n\nFlipperForce allows you to go beyond simple accounting by tracking each Expense Line Item in an Expense Category, so you can compare your Budget vs Actuals spending for each category.\n\n## Setup 1: Workspace Companies\n\nThe [Companies API](/operations/v1.workspace.companies.list) is for tracking each vendor you do business with. For example, The Home Depot where you purchase materials, or your most reliable general contractor who invoices you for completed jobs.\n\nCompanies are shared across all Projects in your Workspace, so you can track your spending with every vendor across every Project.\n\nCreate a Company record for each vendor you make purchases from.\n\n## Setup 2: Workspace Expense Accounts\n\nThe [Expense Accounts API](/operations/v1.workspace.expense-accounts.list) is for tracking each credit card, bank account, Venmo/PayPal account, or payment method used to pay for expenses.\n\nExpense Accounts are shared across all Projects in your Workspace, so you can track your spending for every Account.\n\nCreate an Expense Account record for each account your business makes purchases from.\n\n## Setup 3: Project Expense Categories\n\nThe [Project Expenses: Categories API](/operations/v1.project.expense-categories.list) is for categorizing your spending for each Expense Line Item. For example, Interior Doors, Kitchen, or Appliances.\n\n**NOTE:** Each Project has a separate list of Expense Categories. You must use the Expense Category associated with the Project where you are creating expenses.\n\nProject Expense Categories must be added from the Project's Deal Analysis - Repair Estimator tool. For example, within the \"Exteriors\" top-level category, create a new category called \"Roofing\" to track expenses like shingles, nails, underlayment, etc.\n\nThe fastest way to create repair categories (and thus expense categories) is by loading a Repair Estimator Template onto the Project.\n\n## Example: Creating an Expense Transaction with a Receipt\n\nWith setup complete, you can now create your first Expense Transaction.\n\nLet's use an example purchase from The Home Depot. Assume you received a receipt that has the following data:\n\n* Company: The Home Depot\n* Date: 06/13/26\n* Items:\n    * 1/2 in. x 4 ft. x 8 ft. Plywood Sheet - $28.45\n    * Deck Screws, 1 lb. Box - $9.97\n    * 1 Gal. Interior Eggshell Paint - $29.98\n    * 20V Cordless Drill - $42.67\n* Subtotal: $111.07\n* Sales Tax (8.45%): $9.38\n* Grand Total: $120.45\n* Chip Read XXXXXXXXXXX4213 VISA\n\n### Step 1: Upload the Receipt (optional)\n\nFollow the documentation in the [Project Receipts: Create API](/operations/v1.project.receipts.create) for uploading your Receipt file.\n\nUploading a Receipt is optional. You can also attach it later by updating the Expense Transaction.\n\nThe rest of the example will assume you received an HTTP Response that has the uploaded Receipt's `uuid`, which can be associated with the Transaction below.\n\n### Step 2: Find The Home Depot in your list of Companies\n\nUse the [Companies API](/operations/v1.workspace.companies.list) to find all Companies in your Workspace and locate the `uuid` of The Home Depot in your Workspace.\n\n### Step 3: Find Visa 4213 credit card in your list of Expense Accounts\n\nUse the [Expense Accounts: List API](/operations/v1.workspace.expense-accounts.list) to find the `uuid` of your Visa credit card with card number 4213.\n\n### Step 4: Find relevant Expense Categories for each item\n\nUse the [Project Expenses: Categories: List API](/operations/v1.project.expense-categories.list) to find the `uuid` of the Expense Categories relevant to each item you purchased.\n\nThe example Home Depot line items could be the following:\n\n* 1/2 in. x 4 ft. x 8 ft. Plywood Sheet - \"Framing\"\n* Deck Screws, 1 lb. Box - \"Decks/Porches\"\n* 1 Gal. Interior Eggshell Paint - \"Bathrooms\"\n* 20V Cordless Drill - \"Tools\"\n\n### Step 5: Create the Expense Transaction\n\nThe following example request associates the Company (The Home Depot), Expense Account (Visa 4213), Expense Categories, and Receipt from the previous instructions.\n\nSubmit each purchased item as the `expenses` array.\n\nExample Request:\n\n```json\nPOST /api/v1/project/41a5aedc-a598-403b-9499-a74dc50544e8/expense-transactions/create\n\n{\n  \"date\": \"2026-06-13\",\n  \"company_uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n  \"expense_account_uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n  \"total_tax\": 9.38,\n  \"receipt_uuid\": \"7f8b5b9e-3e2a-4d8d-9f1b-5e88277d8d8d\",\n  \"expenses\": [\n    {\n      \"name\": \"1/2 in. x 4 ft. x 8 ft. Plywood Sheet\",\n      \"amount\": 28.45,\n      \"class\": \"material\",\n      \"expense_category_uuid\": \"3e4f5a6b-7c8d-4e9f-8012-23456789abcd\"\n    },\n    {\n      \"name\": \"Deck Screws, 1 lb. Box\",\n      \"amount\": 9.97,\n      \"class\": \"material\",\n      \"expense_category_uuid\": \"4f5a6b7c-8d9e-4f01-9123-3456789abcde\"\n    },\n    {\n      \"name\": \"1 Gal. Interior Eggshell Paint\",\n      \"amount\": 29.98,\n      \"class\": \"material\",\n      \"expense_category_uuid\": \"5a6b7c8d-9e0f-4012-a234-456789abcdef\"\n    },\n    {\n      \"name\": \"20V Cordless Drill\",\n      \"amount\": 42.67,\n      \"class\": \"other\",\n      \"expense_category_uuid\": \"6b7c8d9e-0f12-4123-b345-56789abcdef0\"\n    }\n  ]\n}\n```\n\nExample Response:\n\n```json\nHTTP/1.1 201 Created\n\n{\n  \"data\": {\n    \"uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n    \"created_at\": \"2026-06-14T15:30:00.000000Z\",\n    \"updated_at\": \"2026-06-14T15:30:00.000000Z\",\n    \"sequence_number\": 104,\n    \"receipt_uuid\": \"7f8b5b9e-3e2a-4d8d-9f1b-5e88277d8d8d\",\n    \"subtotal\": 111.07,\n    \"total_tax\": 9.38,\n    \"grand_total\": 120.45,\n    \"expenses\": [\n      {\n        \"uuid\": \"9d0e1f23-4567-489a-bcde-f0123456789a\",\n        \"created_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-13\",\n        \"invoice_number\": null,\n        \"name\": \"1/2 in. x 4 ft. x 8 ft. Plywood Sheet\",\n        \"class\": \"material\",\n        \"amount\": 28.45,\n        \"tax\": 2.40,\n        \"total\": 30.85,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"3e4f5a6b-7c8d-4e9f-8012-23456789abcd\",\n          \"name\": \"Interior - Framing\"\n        }\n      },\n      {\n        \"uuid\": \"0e1f2345-6789-4abc-9def-0123456789ab\",\n        \"created_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-13\",\n        \"invoice_number\": null,\n        \"name\": \"Deck Screws, 1 lb. Box\",\n        \"class\": \"material\",\n        \"amount\": 9.97,\n        \"tax\": 0.84,\n        \"total\": 10.81,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"4f5a6b7c-8d9e-4f01-9123-3456789abcde\",\n          \"name\": \"Exterior - Decks/Porches\"\n        }\n      },\n      {\n        \"uuid\": \"1f234567-89ab-4cde-8f01-23456789abcd\",\n        \"created_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-13\",\n        \"invoice_number\": null,\n        \"name\": \"1 Gal. Interior Eggshell Paint\",\n        \"class\": \"material\",\n        \"amount\": 29.98,\n        \"tax\": 2.53,\n        \"total\": 32.51,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"5a6b7c8d-9e0f-4012-a234-456789abcdef\",\n          \"name\": \"Interior - Bathrooms\"\n        }\n      },\n      {\n        \"uuid\": \"23456789-abcd-4ef0-9123-456789abcdef\",\n        \"created_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-14T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-13\",\n        \"invoice_number\": null,\n        \"name\": \"20V Cordless Drill\",\n        \"class\": \"other\",\n        \"amount\": 42.67,\n        \"tax\": 3.61,\n        \"total\": 46.28,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"6b7c8d9e-0f12-4123-b345-56789abcdef0\",\n          \"name\": \"Other - Tools\"\n        }\n      }\n    ]\n  }\n}\n```\n\n## How taxes are handled\n\nMost receipts do not explicitly list how much tax was incurred for each item. But a receipt only lists the total tax charged as a percentage of the subtotal.\n\nFlipperForce automatically distributes the Total Tax across each line item amount.\n\nThis allows you to account for spending on taxes as part of your total construction costs.\n\nRead the following example transaction for how taxes are distributed:\n\n```monospace\nNails          $100\nDecking        $300\nShingles       $600\n\n     Subtotal $1000\n    Total Tax  $100\n\n  Grand Total $1100\n```\n\nFlipperForce will automatically distribute the Total Tax across each Expense Line Item when you save the Transaction:\n\n```monospace\nItem          |     Amount |   Tax | Total\n--------------+------------+-------+-------\nNails         |       $100 |   $10 |  $110\nDecking       |       $300 |   $30 |  $330\nShingles      |       $600 |   $60 |  $660\n```\n\nThe Tax across all items still totals $100 (which was entered as Total Tax), and the Transaction Grand Total is computed as 110 + 330 + 660 = 1100.\n\n## Default fields from the root level\n\nSome fields submitted at the root level will be automatically applied to each item in the `expenses` array when omitted from the expense item.\n\n* `date`\n* `invoice_number`\n* `company_uuid`\n* `expense_account_uuid`\n* `expense_category_uuid`\n\nHere is an example using the `date` field and overwriting it:\n\n```json\n{\n  \"date\": \"2026-06-13\",\n  \"expenses\": [\n    {\n      // Unnecessary because the root level uses \"date\"\n      \"date\": \"2026-06-13\",\n    },\n    {\n      // But can be submitted with a different \"date\"\n      // to override the root level value\n      \"date\": \"2026-07-25\",\n    },\n  ]\n}\n```\n\n## Reporting on Total Amounts\n\nUse the [Project Expenses: Line Items - List API](/operations/v1.project.expense-line-items.list) to query for total expense amounts and build expense reports."
+      description: Create an Expense Transaction with Line Items to track your expenses.
       summary: Create
       tags:
       - 'Project Expenses: Transactions'
@@ -617,133 +527,7 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   schemas:
-    Create_Expense_Transaction_Request:
-      type: object
-      properties:
-        receipt_uuid:
-          type:
-          - string
-          - 'null'
-          description: Receipt UUID to associate with the created Expense Transaction and every created Expense line item. Only 1 Receipt can be associated on an Expense Transaction, and a Receipt cannot be associated to more than one Expense Transaction.
-        date:
-          type: string
-          description: Default date for created Expense line items in `YYYY-MM-DD` format. Individual `expenses` records can override this value with their own `date`.
-        company_uuid:
-          type:
-          - string
-          - 'null'
-          description: Default Company/vendor UUID for created Expense line items. Individual `expenses` records can override this value with their own `company_uuid`. This Company must be in your Workspace.
-        expense_account_uuid:
-          type:
-          - string
-          - 'null'
-          description: Default Expense Account UUID for created Expense line items. Individual `expenses` records can override this value with their own `expense_account_uuid`. This Expense Account must be in your Workspace.
-        expense_category_uuid:
-          type:
-          - string
-          - 'null'
-          description: Default Expense Category UUID for created Expense line items. Individual `expenses` records can override this value with their own `expense_category_uuid`. This Expense Category must be in the Project where the Expense Transaction is created.
-        total_tax:
-          type: number
-          description: Required. Total tax charged for the entire Expense Transaction. Such as `1234.56`. Once received, FlipperForce will automatically distribute the tax amount proportionally to all Expenses on the Transaction.
-        invoice_number:
-          type:
-          - string
-          - 'null'
-          description: Default invoice number for created Expense line items. Individual `expenses` records can override this value with their own `invoice_number`.
-        expenses:
-          type: array
-          description: Required. Expense line items to create for this Expense Transaction (at least 1). For example, the individual items or services that were charged and printed on a receipt or invoice.
-          items:
-            type: object
-            description: Required. Expense line item.
-            properties:
-              date:
-                type: string
-                description: Provide this field unless `date` is provided at the root-level. Date this Expense was incurred in `YYYY-MM-DD` format.
-              invoice_number:
-                type:
-                - string
-                - 'null'
-                description: Invoice Number. When omitted, the root-level `invoice_number` is used when provided.
-              expense_account_uuid:
-                type:
-                - string
-                - 'null'
-                description: Expense Account UUID. When omitted, the root-level `expense_account_uuid` is used when provided.
-              company_uuid:
-                type:
-                - string
-                - 'null'
-                description: Company UUID for the vendor who supplied the purchased item or service. When omitted, the root-level `company_uuid` is used when provided.
-              expense_category_uuid:
-                type:
-                - string
-                - 'null'
-                description: Expense Category UUID. When omitted, the root-level `expense_category_uuid` is used when provided.
-              name:
-                type: string
-                description: Required. Description of the purchased item or service.
-              class:
-                type:
-                - string
-                - 'null'
-                description: Expense Classification. Allowed values are `labor`, `material`, `labor-and-material`, and `other`.
-                enum:
-                - labor
-                - material
-                - labor-and-material
-                - other
-                - null
-              amount:
-                type: number
-                description: Required. Expense amount BEFORE tax, in dollars. Such as `1234.56`
-            required:
-            - name
-            - amount
-      required:
-      - total_tax
-      - expenses
-      title: Create Expense Transaction Request
-    Expense_Transaction_List:
-      type: array
-      items:
-        $ref: '#/components/schemas/Expense_Transaction'
-      title: Expense Transaction List
     Expense_Transaction:
       type: object
       properties:
@@ -799,69 +583,11 @@ components:
       - grand_total
       - expenses
       title: Expense Transaction
-    Update_Expense_Transaction_Request:
-      type: object
-      properties:
-        receipt_uuid:
-          type:
-          - string
-          - 'null'
-          description: Receipt UUID to associate with the created Expense Transaction and every created Expense line item. Only 1 Receipt can be associated on an Expense Transaction, and a Receipt cannot be associated to more than one Expense Transaction. Send `null` to unlink (disassociate) the Transaction's current Receipt.
-        total_tax:
-          type: number
-          description: Total tax charged for the entire Expense Transaction. Such as `1234.56`. When omitted, FlipperForce preserves the Transaction's current total tax and redistributes it across all Expense line items after submitted changes are applied.
-        expenses:
-          type: array
-          description: Expense line items to update or create. When omitted all existing Expenses are kept as-is. They are not deleted.
-          items:
-            type: object
-            description: Expense line item.
-            properties:
-              uuid:
-                type: string
-                description: Expense UUID of the existing Expense to update. If you omit this field, a new Expense record will be created with this data.
-              date:
-                type: string
-                description: Required. Date this Expense was incurred in `YYYY-MM-DD` format.
-              invoice_number:
-                type:
-                - string
-                - 'null'
-                description: Invoice number entered for this Expense.
-              expense_account_uuid:
-                type:
-                - string
-                - 'null'
-                description: Expense Account UUID assigned to this Expense. This Expense Account must be in your Workspace.
-              company_uuid:
-                type:
-                - string
-                - 'null'
-                description: Company/vendor UUID assigned to this Expense. This Company must be in your Workspace.
-              expense_category_uuid:
-                type:
-                - string
-                - 'null'
-                description: Expense Category UUID assigned to this Expense. This Expense Category must be in the same Project as the Expense Transaction.
-              name:
-                type: string
-                description: Description of the purchased item or service.
-              class:
-                type:
-                - string
-                - 'null'
-                description: Expense classification.
-              amount:
-                type: number
-                description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
-            required:
-            - date
-            - name
-            - amount
-            additionalProperties: {}
-      required:
-      - expenses
-      title: Update Expense Transaction Request
+    Expense_Transaction_List:
+      type: array
+      items:
+        $ref: '#/components/schemas/Expense_Transaction'
+      title: Expense Transaction List
     Expense_Line_Item:
       type: object
       properties:
@@ -975,6 +701,190 @@ components:
       - company
       - expense_category
       title: Expense Line Item
+    Create_Expense_Transaction_Request:
+      type: object
+      properties:
+        receipt_uuid:
+          type:
+          - string
+          - 'null'
+          description: Receipt UUID to associate with the created Expense Transaction and every created Expense line item. Only 1 Receipt can be associated on an Expense Transaction, and a Receipt cannot be associated to more than one Expense Transaction.
+        date:
+          type: string
+          description: Default date for created Expense line items in `YYYY-MM-DD` format. Individual `expenses` records can override this value with their own `date`.
+        company_uuid:
+          type:
+          - string
+          - 'null'
+          description: Default Company/vendor UUID for created Expense line items. Individual `expenses` records can override this value with their own `company_uuid`. This Company must be in your Workspace.
+        expense_account_uuid:
+          type:
+          - string
+          - 'null'
+          description: Default Expense Account UUID for created Expense line items. Individual `expenses` records can override this value with their own `expense_account_uuid`. This Expense Account must be in your Workspace.
+        expense_category_uuid:
+          type:
+          - string
+          - 'null'
+          description: Default Expense Category UUID for created Expense line items. Individual `expenses` records can override this value with their own `expense_category_uuid`. This Expense Category must be in the Project where the Expense Transaction is created.
+        total_tax:
+          type: number
+          description: Required. Total tax charged for the entire Expense Transaction. Such as `1234.56`. Once received, FlipperForce will automatically distribute the tax amount proportionally to all Expenses on the Transaction.
+        invoice_number:
+          type:
+          - string
+          - 'null'
+          description: Default invoice number for created Expense line items. Individual `expenses` records can override this value with their own `invoice_number`.
+        expenses:
+          type: array
+          description: Required. Expense line items to create for this Expense Transaction (at least 1). For example, the individual items or services that were charged and printed on a receipt or invoice.
+          items:
+            type: object
+            description: Required. Expense line item.
+            properties:
+              date:
+                type: string
+                description: Provide this field unless `date` is provided at the root-level. Date this Expense was incurred in `YYYY-MM-DD` format.
+              invoice_number:
+                type:
+                - string
+                - 'null'
+                description: Invoice Number. When omitted, the root-level `invoice_number` is used when provided.
+              expense_account_uuid:
+                type:
+                - string
+                - 'null'
+                description: Expense Account UUID. When omitted, the root-level `expense_account_uuid` is used when provided.
+              company_uuid:
+                type:
+                - string
+                - 'null'
+                description: Company UUID for the vendor who supplied the purchased item or service. When omitted, the root-level `company_uuid` is used when provided.
+              expense_category_uuid:
+                type:
+                - string
+                - 'null'
+                description: Expense Category UUID. When omitted, the root-level `expense_category_uuid` is used when provided.
+              name:
+                type: string
+                description: Required. Description of the purchased item or service.
+              class:
+                type:
+                - string
+                - 'null'
+                description: Expense Classification. Allowed values are `labor`, `material`, `labor-and-material`, and `other`.
+                enum:
+                - labor
+                - material
+                - labor-and-material
+                - other
+                - null
+              amount:
+                type: number
+                description: Required. Expense amount BEFORE tax, in dollars. Such as `1234.56`
+            required:
+            - name
+            - amount
+      required:
+      - total_tax
+      - expenses
+      title: Create Expense Transaction Request
+    Update_Expense_Transaction_Request:
+      type: object
+      properties:
+        receipt_uuid:
+          type:
+          - string
+          - 'null'
+          description: Receipt UUID to associate with the created Expense Transaction and every created Expense line item. Only 1 Receipt can be associated on an Expense Transaction, and a Receipt cannot be associated to more than one Expense Transaction. Send `null` to unlink (disassociate) the Transaction's current Receipt.
+        total_tax:
+          type: number
+          description: Total tax charged for the entire Expense Transaction. Such as `1234.56`. When omitted, FlipperForce preserves the Transaction's current total tax and redistributes it across all Expense line items after submitted changes are applied.
+        expenses:
+          type: array
+          description: Expense line items to update or create. When omitted all existing Expenses are kept as-is. They are not deleted.
+          items:
+            type: object
+            description: Expense line item.
+            properties:
+              uuid:
+                type: string
+                description: Expense UUID of the existing Expense to update. If you omit this field, a new Expense record will be created with this data.
+              date:
+                type: string
+                description: Required. Date this Expense was incurred in `YYYY-MM-DD` format.
+              invoice_number:
+                type:
+                - string
+                - 'null'
+                description: Invoice number entered for this Expense.
+              expense_account_uuid:
+                type:
+                - string
+                - 'null'
+                description: Expense Account UUID assigned to this Expense. This Expense Account must be in your Workspace.
+              company_uuid:
+                type:
+                - string
+                - 'null'
+                description: Company/vendor UUID assigned to this Expense. This Company must be in your Workspace.
+              expense_category_uuid:
+                type:
+                - string
+                - 'null'
+                description: Expense Category UUID assigned to this Expense. This Expense Category must be in the same Project as the Expense Transaction.
+              name:
+                type: string
+                description: Description of the purchased item or service.
+              class:
+                type:
+                - string
+                - 'null'
+                description: Expense classification.
+              amount:
+                type: number
+                description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
+            required:
+            - date
+            - name
+            - amount
+            additionalProperties: {}
+      required:
+      - expenses
+      title: Update Expense Transaction Request
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

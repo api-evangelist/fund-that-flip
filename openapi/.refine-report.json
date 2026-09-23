@@ -1,0 +1,50 @@
+{
+  "provider": "fund-that-flip",
+  "sources": [
+    "_original/fund-that-flip-flipperforce-public-api.json"
+  ],
+  "outputs": [
+    "fund-that-flip-activity-log-api-openapi.yml",
+    "fund-that-flip-attachment-upload-api-openapi.yml",
+    "fund-that-flip-company-api-openapi.yml",
+    "fund-that-flip-company-categories-api-openapi.yml",
+    "fund-that-flip-expense-accounts-api-openapi.yml",
+    "fund-that-flip-project-api-openapi.yml",
+    "fund-that-flip-project-expenses-categories-api-openapi.yml",
+    "fund-that-flip-project-expenses-line-items-api-openapi.yml",
+    "fund-that-flip-project-expenses-transactions-api-openapi.yml",
+    "fund-that-flip-project-income-api-openapi.yml",
+    "fund-that-flip-project-photo-log-photos-api-openapi.yml",
+    "fund-that-flip-project-receipts-api-openapi.yml",
+    "fund-that-flip-project-updates-api-openapi.yml",
+    "fund-that-flip-project-updates-photos-api-openapi.yml",
+    "fund-that-flip-user-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "fund-that-flip-flipperforce-public-api.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0; renamed 32 component key(s) illegal in 3.x (e.g. Activity Log)",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/fund-that-flip-flipperforce-public-api.yml: archived document superseded by a larger archived document",
+    "fund-that-flip-activity-log-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-attachment-upload-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-company-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-company-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-expense-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-expenses-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-expenses-line-items-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-expenses-transactions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-income-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-photo-log-photos-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-receipts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-updates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-project-updates-photos-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fund-that-flip-user-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

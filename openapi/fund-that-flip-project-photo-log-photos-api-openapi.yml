@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -188,7 +98,7 @@ paths:
       operationId: v1.project.photo-log.create
       description: 'Create a Photo Log Photo using an uploaded photo from an
 
-        [Upload Intent](/operations/v1.workspace.upload-intent.create).
+        Upload Intent.
 
 
         Submitting the `photo_timestamp` parameter as a Unix timestamp in seconds
@@ -470,40 +380,71 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   schemas:
+    V1PhotoLogUpdateRequest:
+      type: object
+      properties:
+        photo_date:
+          type: string
+          format: date
+          description: 'Optional. Date this Photo was captured. Photos with the same
+
+            Date display ordered next to each other in the Photo Log.'
+        photo_description:
+          type:
+          - string
+          - 'null'
+          description: 'Optional. Text displayed alongside the photo. Useful for
+
+            communicating more context about what is in the photo.'
+      title: V1PhotoLogUpdateRequest
+    Project_Photo_Log__Photo:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Identifier
+        order:
+          type: integer
+          description: 'Sequence position of this Photo relative to other Photos with
+
+            the same Photo Date. Smaller numbers will display before larger
+
+            numbers. Often this is the Unix timestamp of when the Photo was
+
+            captured. But if the photos have been manually re-ordered, the
+
+            order will begin from 0 and increment by 1. If two photos have
+
+            the same order, photos created more recently will display first.'
+        created_at:
+          type: string
+          description: 'Timestamp when Photo was added to Photo Log in ISO 8601 Zulu
+
+            format with microseconds. Example: `2025-04-30T21:21:10.123456Z`'
+        photo_date:
+          type: string
+          description: Date Group where this Photo is organized. In format `YYYY-MM-DD`
+        photo_description:
+          type:
+          - string
+          - 'null'
+          description: 'Text displayed alongside the photo. Useful for communicating more
+
+            context about what is in the photo or that the viewer would find informative.'
+        photo:
+          description: 'Details about a single Photo, such as URLs for displaying it
+
+            at various sizes'
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - order
+      - created_at
+      - photo_date
+      - photo_description
+      - photo
+      title: 'Project Photo Log: Photo'
     File:
       type: object
       properties:
@@ -565,33 +506,6 @@ components:
       - source_url
       - preview_url
       title: File
-    V1PhotoLogUpdateRequest:
-      type: object
-      properties:
-        photo_date:
-          type: string
-          format: date
-          description: 'Optional. Date this Photo was captured. Photos with the same
-
-            Date display ordered next to each other in the Photo Log.'
-        photo_description:
-          type:
-          - string
-          - 'null'
-          description: 'Optional. Text displayed alongside the photo. Useful for
-
-            communicating more context about what is in the photo.'
-      title: V1PhotoLogUpdateRequest
-    Project_Photo_Log:
-      type: object
-      properties:
-        photos_by_date:
-          type: array
-          items:
-            $ref: '#/components/schemas/Project_Photo_Log__Date_Group'
-      required:
-      - photos_by_date
-      title: Project Photo Log
     Project_Photo_Log__Date_Group:
       type: object
       properties:
@@ -607,53 +521,49 @@ components:
       - group_date
       - photos
       title: 'Project Photo Log: Date Group'
-    Project_Photo_Log__Photo:
+    Project_Photo_Log:
       type: object
       properties:
-        uuid:
-          type: string
-          description: Public Identifier
-        order:
-          type: integer
-          description: 'Sequence position of this Photo relative to other Photos with
-
-            the same Photo Date. Smaller numbers will display before larger
-
-            numbers. Often this is the Unix timestamp of when the Photo was
-
-            captured. But if the photos have been manually re-ordered, the
-
-            order will begin from 0 and increment by 1. If two photos have
-
-            the same order, photos created more recently will display first.'
-        created_at:
-          type: string
-          description: 'Timestamp when Photo was added to Photo Log in ISO 8601 Zulu
-
-            format with microseconds. Example: `2025-04-30T21:21:10.123456Z`'
-        photo_date:
-          type: string
-          description: Date Group where this Photo is organized. In format `YYYY-MM-DD`
-        photo_description:
-          type:
-          - string
-          - 'null'
-          description: 'Text displayed alongside the photo. Useful for communicating more
-
-            context about what is in the photo or that the viewer would find informative.'
-        photo:
-          description: 'Details about a single Photo, such as URLs for displaying it
-
-            at various sizes'
-          $ref: '#/components/schemas/File'
+        photos_by_date:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project_Photo_Log__Date_Group'
       required:
-      - uuid
-      - order
-      - created_at
-      - photo_date
-      - photo_description
-      - photo
-      title: 'Project Photo Log: Photo'
+      - photos_by_date
+      title: Project Photo Log
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

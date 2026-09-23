@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -253,7 +163,7 @@ paths:
         aligned as your Project progresses.
 
 
-        - [Read more about Project Updates](https://www.flipperforce.com/software-features/project-updates)'
+        - Read more about Project Updates'
       summary: Create
       tags:
       - Project Updates
@@ -342,7 +252,7 @@ paths:
       description: 'Update an existing Project Update.
 
 
-        - [Read more about Project Updates](https://www.flipperforce.com/software-features/project-updates)'
+        - Read more about Project Updates'
       summary: Update
       tags:
       - Project Updates
@@ -435,7 +345,7 @@ paths:
       description: 'Delete an existing Project Update.
 
 
-        - [Read more about Project Updates](https://www.flipperforce.com/software-features/project-updates)'
+        - Read more about Project Updates'
       summary: Delete
       tags:
       - Project Updates
@@ -507,124 +417,7 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   schemas:
-    File:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        name:
-          type: string
-          description: 'Short human-readable description to distinguish this file from
-
-            other files across the entire Project'
-        size:
-          type: integer
-          description: File size in bytes
-        type:
-          type: string
-          description: 'Roughly what kind of file is available. Such as `pdf` or `jpeg`.
-
-            Note that this is not a file MIME-type, but can be used by
-
-            clients to change how they handle the file.'
-        source_url:
-          type: object
-          description: URLs to full versions of the file
-          properties:
-            view:
-              type: string
-              description: URL to view the file on the device, as an inline HTTP response
-            download:
-              type: string
-              description: URL to download the file, as a download HTTP response
-          required:
-          - view
-          - download
-        preview_url:
-          type: object
-          description: 'URLs to view smaller versions of the file''s contents. Images
-
-            will return a smaller version of the image itself. Documents
-
-            will return a placeholder document image and not the file''s
-
-            actual contents.'
-          properties:
-            thumbnail:
-              type: string
-              description: Up to approximately 300px wide
-            large:
-              type: string
-              description: Up to approximately 600px wide
-          required:
-          - thumbnail
-          - large
-      required:
-      - uuid
-      - name
-      - size
-      - type
-      - source_url
-      - preview_url
-      title: File
-    Project_Update__Photo:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier
-        order:
-          type: integer
-          description: 'Order number for displaying this photo relative to others.
-
-            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
-
-            A Photo with `order` of `5` should display before another Photo
-
-            with `order` of `10`.'
-        photo:
-          description: Photo details
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - order
-      - photo
-      title: 'Project Update: Photo'
     V1ProjectProgressUpdateRequest:
       type: object
       properties:
@@ -725,6 +518,90 @@ components:
       - author
       - photos
       title: Project Update
+    File:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        name:
+          type: string
+          description: 'Short human-readable description to distinguish this file from
+
+            other files across the entire Project'
+        size:
+          type: integer
+          description: File size in bytes
+        type:
+          type: string
+          description: 'Roughly what kind of file is available. Such as `pdf` or `jpeg`.
+
+            Note that this is not a file MIME-type, but can be used by
+
+            clients to change how they handle the file.'
+        source_url:
+          type: object
+          description: URLs to full versions of the file
+          properties:
+            view:
+              type: string
+              description: URL to view the file on the device, as an inline HTTP response
+            download:
+              type: string
+              description: URL to download the file, as a download HTTP response
+          required:
+          - view
+          - download
+        preview_url:
+          type: object
+          description: 'URLs to view smaller versions of the file''s contents. Images
+
+            will return a smaller version of the image itself. Documents
+
+            will return a placeholder document image and not the file''s
+
+            actual contents.'
+          properties:
+            thumbnail:
+              type: string
+              description: Up to approximately 300px wide
+            large:
+              type: string
+              description: Up to approximately 600px wide
+          required:
+          - thumbnail
+          - large
+      required:
+      - uuid
+      - name
+      - size
+      - type
+      - source_url
+      - preview_url
+      title: File
+    Project_Update__Photo:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier
+        order:
+          type: integer
+          description: 'Order number for displaying this photo relative to others.
+
+            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
+
+            A Photo with `order` of `5` should display before another Photo
+
+            with `order` of `10`.'
+        photo:
+          description: Photo details
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - order
+      - photo
+      title: 'Project Update: Photo'
     User:
       type: object
       properties:
@@ -749,6 +626,39 @@ components:
       - email
       - avatar
       title: User
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -261,7 +171,7 @@ paths:
       operationId: v1.project.receipts.create
       description: 'Store an uploaded file as a Project Receipt by using an
 
-        [Upload Intent](/operations/v1.workspace.upload-intent.create)
+        Upload Intent
 
         for each file.
 
@@ -274,7 +184,7 @@ paths:
         ## Associating to Expenses
 
 
-        A Receipt can be associated to a [Project Expense Transaction](/operations/v1.project.expense-transactions.create) so you can track which Expenses and Transactions are accounted for on the Receipt.
+        A Receipt can be associated to a Project Expense Transaction so you can track which Expenses and Transactions are accounted for on the Receipt.
 
 
         A single Receipt can only be associated to one Transaction.
@@ -286,9 +196,9 @@ paths:
         If you have Receipt files or photos on your phone, uploading Receipts using our mobile app "FlipperForce Field" may be easier than manually instrumenting our Public API.
 
 
-        * [iOS Mobile App](https://apps.apple.com/us/app/flipperforce/id6746277826)
+        * iOS Mobile App
 
-        * [Android Mobile App](https://play.google.com/store/apps/details?hl=en_US&id=com.flipperforce)'
+        * Android Mobile App'
       summary: Create
       tags:
       - Project Receipts
@@ -540,6 +450,18 @@ paths:
                     - null
 components:
   responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
     ValidationException:
       description: Validation error
       content:
@@ -560,60 +482,7 @@ components:
             required:
             - message
             - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   schemas:
-    Receipt:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        created_at:
-          type: string
-          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        issue_date:
-          type:
-          - string
-          - 'null'
-          description: 'Date when the vendor issued the Receipt. Such as when it was
-
-            printed at the vendor''s point of sale. Date string formatted as
-
-            YYYY-MM-DD such as `2025-07-23`.'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: Any additional details about this Receipt
-        from_client:
-          type: string
-          description: 'Details on where this Receipt originated, such as the web application,
-
-            mobile application, or external integration.'
-        file:
-          description: Receipt file
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - created_at
-      - issue_date
-      - notes
-      - from_client
-      - file
-      title: Receipt
     File:
       type: object
       properties:
@@ -675,31 +544,6 @@ components:
       - source_url
       - preview_url
       title: File
-    V1DocumentsReceiptUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: '(Optional) Short description of the file, such as its filename or
-
-            describing what items were purchased. Available in response as
-
-            `file.name`'
-        issue_date:
-          type:
-          - string
-          - 'null'
-          description: '(Optional) Date the Receipt was provided by the vendor. Such as
-
-            the date printed on the Receipt given at the point of sale.
-
-            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Details not captured in other fields.
-      title: V1DocumentsReceiptUpdateRequest
     V1DocumentsReceiptCreateRequest:
       type: object
       properties:
@@ -735,6 +579,72 @@ components:
       required:
       - intent_uuid
       title: V1DocumentsReceiptCreateRequest
+    V1DocumentsReceiptUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: '(Optional) Short description of the file, such as its filename or
+
+            describing what items were purchased. Available in response as
+
+            `file.name`'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+
+            the date printed on the Receipt given at the point of sale.
+
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Details not captured in other fields.
+      title: V1DocumentsReceiptUpdateRequest
+    Receipt:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        created_at:
+          type: string
+          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          description: 'Date when the vendor issued the Receipt. Such as when it was
+
+            printed at the vendor''s point of sale. Date string formatted as
+
+            YYYY-MM-DD such as `2025-07-23`.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any additional details about this Receipt
+        from_client:
+          type: string
+          description: 'Details on where this Receipt originated, such as the web application,
+
+            mobile application, or external integration.'
+        file:
+          description: Receipt file
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - created_at
+      - issue_date
+      - notes
+      - from_client
+      - file
+      title: Receipt
   securitySchemes:
     PublicApiBearerAuth:
       type: http

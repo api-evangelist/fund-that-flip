@@ -5,97 +5,7 @@ info:
   description: '# FlipperForce Public API • Version 1
 
 
-    ## How do I request an API key?
-
-
-    1. [Request a Public API key.](https://tools.flipperforce.com/integrations)
-
-    2. Use the API key as an Authorization HTTP header with Bearer token: `Authorization: Bearer token-goes-here`
-
-
-    ## Support / Help
-
-
-    * Email: support@flipperforce.com
-
-    * Chat: https://tools.flipperforce.com/
-
-
-    ## Rate Limits
-
-
-    If you encounter a `429 Too Many Requests` response, you have submitted too many
-
-    requests in a short amount of time. Please decrease the amount or frequency of
-
-    your requests and try again.
-
-
-    ## Changelog
-
-
-    ### July 25, 2026 - v0.0.10
-
-
-    * Add support for [Activity Log](/operations/v1.workspace.activity-log.list).
-
-
-    ### July 23, 2026 - v0.0.9
-
-
-    * Response format of `created_at` and `updated_at` fields now include microseconds. Old format: `2026-06-14T15:30:45Z` and new format: `2026-06-14T15:30:45.123456Z`
-
-
-    ### July 21, 2026 - v0.0.8
-
-
-    * OpenAPI spec documents Bearer Token authentication strategy
-
-
-    ### June 22, 2026 - v0.0.6
-
-
-    * Add support for [Project Income](/operations/v1.project.income.list).
-
-    * [Create Upload Intent](/operations/v1.workspace.upload-intent.create) properly documents API response code as 201 Created instead of 200 OK.
-
-
-    ### June 21, 2026 - v0.0.4
-
-
-    * Add support for [Project Expenses: Transactions](/operations/v1.project.expense-transactions.list).
-
-    * Add support for [Project Expenses: Line Items](/operations/v1.project.expense-line-items.list).
-
-
-    ### June 4, 2026 - v0.0.3
-
-
-    * Add support for [Project Expenses: Categories](/operations/v1.project.expense-categories.list).
-
-
-    ### June 2, 2026 - v0.0.2
-
-
-    * Add support for [Expense Accounts](/operations/v1.workspace.expense-accounts.list).
-
-    * Add support for [Companies](/operations/v1.workspace.companies.list).
-
-    * Add support for [Company Categories](/operations/v1.workspace.companies.categories.list).
-
-
-    ### September 3, 2025 - v0.0.1
-
-
-    * [Project Photo Log: Photos - Create](/operations/v1.project.photo-log.create) added support for ordering Photos by EXIF timestamp via parameter `photo_timestamp`.
-
-
-    ### August 13, 2025
-
-
-    * [Create Upload Intent API](/operations/v1.workspace.upload-intent.create) now requires a new POST parameter `upload_type` noting the uploaded file''s use case.
-
-    '
+    ## How do I request an API key?'
 servers:
 - url: https://tools.flipperforce.com/api/v1
 security:
@@ -106,7 +16,7 @@ paths:
   /project/{projectV1}/expense-line-items/list:
     get:
       operationId: v1.project.expense-line-items.list
-      description: "List Expense line items within a Project.\n\nExpense Line Items are the individual charges within an Expense Transaction, such as the items purchased and listed on a receipt.\n\n## Reporting on Total Amounts\n\nSee the `data.totals` property in the response for the sum total of various Expense Line Item fields (before pagination).\n\n* `data.totals.amount` - Sum of all `amount` values for all matching Expenses (excludes tax)\n* `data.totals.tax` - Sum of all `tax` values for all matching Expenses\n* `data.totals.total` - Sum of all `total` values for all matching Expenses (amount + tax)\n\nThe total number of records matching the query parameters is in `meta.total_count`.\n\n## Filter by date range\n\n Supports limiting to date ranges by using a combination of these operators:\n\n * date[gt] - greater than\n * date[gte] - greater than or equal to\n * date[lt] - less than\n * date[lte] - less than or equal to\n\n## Example: Find Expenses for a specific Date\n\n```text\nGET /api/v1/project/{projectV1}/expense-line-items/list?date=2025-09-15\n```\n\n## Example: Year-to-Date Totals\n\nRequest Expenses using a year-to-date range, then read the returned totals.\n\nFor example, Expenses year-to-date through June 19, 2026.\n\n* date[gte]=2026-01-01\n* date[lte]=2026-06-19\n\n```text\nGET /api/v1/project/{projectV1}/expense-line-items/list?date[gte]=2026-01-01&date[lte]=2026-06-19\n```\n\nExample response body excerpt:\n\n```json\n{\n  \"data\": {\n    \"totals\": {\n      \"amount\": 475.25,\n      \"tax\": 40.14,\n      \"total\": 515.39\n    },\n    \"expenses\": [\n      {\n        \"uuid\": \"9d0e1f23-4567-489a-bcde-f0123456789a\",\n        \"created_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-19\",\n        \"invoice_number\": \"HD-4213\",\n        \"name\": \"Architectural roof shingles\",\n        \"class\": \"material\",\n        \"amount\": 475.25,\n        \"tax\": 40.14,\n        \"total\": 515.39,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"3e4f5a6b-7c8d-4e9f-8012-23456789abcd\",\n          \"name\": \"Roofing\"\n        }\n      }\n    ]\n  }\n}\n```\n\n## Example: Per Company Totals\n\nUse the [Companies List API](/operations/v1.workspace.companies.list) to find the UUID of the Company you want, then provide the UUID with filter `company_uuids[]`.\n\nThen read the response field `data.totals` to find the total.\n\n```text\nGET /api/v1/project/{projectV1}/expense-line-items/list?company_uuids[]=2d3e4f5a-6b7c-4d8e-9f01-123456789abc\n```\n\nExample response body excerpt:\n\n```json\n{\n  \"data\": {\n    \"totals\": {\n      \"amount\": 475.25,\n      \"tax\": 40.14,\n      \"total\": 515.39\n    },\n    \"expenses\": [\n      {\n        \"uuid\": \"9d0e1f23-4567-489a-bcde-f0123456789a\",\n        \"created_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-19\",\n        \"invoice_number\": \"HD-4213\",\n        \"name\": \"Architectural roof shingles\",\n        \"class\": \"material\",\n        \"amount\": 475.25,\n        \"tax\": 40.14,\n        \"total\": 515.39,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"3e4f5a6b-7c8d-4e9f-8012-23456789abcd\",\n          \"name\": \"Roofing\"\n        }\n      }\n    ]\n  }\n}\n```\n\n## Example: Per Expense Category Totals\n\nUse the [Project Expenses: Categories List API](/operations/v1.project.expense-categories.list) to find the UUID of the Category you want, then provide the UUID with filter `expense_category_uuids[]`.\n\nThen read the response field `data.totals` to find the total.\n\n```text\nGET /api/v1/project/{projectV1}/expense-line-items/list?expense_category_uuids[]=3e4f5a6b-7c8d-4e9f-8012-23456789abcd\n```\n\nExample response body excerpt:\n\n```json\n{\n  \"data\": {\n    \"totals\": {\n      \"amount\": 475.25,\n      \"tax\": 40.14,\n      \"total\": 515.39\n    },\n    \"expenses\": [\n      {\n        \"uuid\": \"9d0e1f23-4567-489a-bcde-f0123456789a\",\n        \"created_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-19\",\n        \"invoice_number\": \"HD-4213\",\n        \"name\": \"Architectural roof shingles\",\n        \"class\": \"material\",\n        \"amount\": 475.25,\n        \"tax\": 40.14,\n        \"total\": 515.39,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"3e4f5a6b-7c8d-4e9f-8012-23456789abcd\",\n          \"name\": \"Roofing\"\n        }\n      }\n    ]\n  }\n}\n```\n\n## Example: Per Expense Account Totals\n\nUse the [Expense Accounts List API](/operations/v1.workspace.expense-accounts.list) to find the UUID of the Account you want, then provide the UUID with filter `expense_account_uuids[]`.\n\nThen read the response field `data.totals` to find the total.\n\n```text\nGET /api/v1/project/{projectV1}/expense-line-items/list?expense_account_uuids[]=1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\n```\n\nExample response body excerpt:\n\n```json\n{\n  \"data\": {\n    \"totals\": {\n      \"amount\": 475.25,\n      \"tax\": 40.14,\n      \"total\": 515.39\n    },\n    \"expenses\": [\n      {\n        \"uuid\": \"9d0e1f23-4567-489a-bcde-f0123456789a\",\n        \"created_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"updated_at\": \"2026-06-19T15:30:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2026-06-19\",\n        \"invoice_number\": \"HD-4213\",\n        \"name\": \"Architectural roof shingles\",\n        \"class\": \"material\",\n        \"amount\": 475.25,\n        \"tax\": 40.14,\n        \"total\": 515.39,\n        \"expense_account\": {\n          \"uuid\": \"1c2d3e4f-5a6b-4c7d-8e9f-0123456789ab\",\n          \"name\": \"Visa 4213\"\n        },\n        \"company\": {\n          \"uuid\": \"2d3e4f5a-6b7c-4d8e-9f01-123456789abc\",\n          \"name\": \"The Home Depot\"\n        },\n        \"expense_category\": {\n          \"uuid\": \"3e4f5a6b-7c8d-4e9f-8012-23456789abcd\",\n          \"name\": \"Roofing\"\n        }\n      }\n    ]\n  }\n}\n```\n\n## Example: Expenses missing certain data\n\nThe API supports flags for returning Expenses without certain data:\n\n* Company: `has_company=false`\n* Expense Account: `has_expense_account=false`\n* Expense Category: `has_expense_category=false`\n* Class: `has_class=false`\n\nFor example, use `has_expense_account=false` to find Expenses without an Expense Account set:\n\n```text\nGET /api/v1/project/{projectV1}/expense-line-items/list?has_expense_account=false\n```\n\nExample response body excerpt:\n\n```json\n{\n  \"data\": {\n    \"totals\": {\n      \"amount\": 125.75,\n      \"tax\": 10.56,\n      \"total\": 136.31\n    },\n    \"expenses\": [\n      {\n        \"uuid\": \"0e1f2345-6789-4abc-9def-0123456789ab\",\n        \"created_at\": \"2025-12-31T15:35:00.000000Z\",\n        \"updated_at\": \"2025-12-31T15:35:00.000000Z\",\n        \"transaction_uuid\": \"8c9d0e1f-2345-4567-89ab-cdef01234567\",\n        \"date\": \"2025-12-31\",\n        \"invoice_number\": null,\n        \"name\": \"Unassigned roofing receipt\",\n        \"class\": \"other\",\n        \"amount\": 125.75,\n        \"tax\": 10.56,\n        \"total\": 136.31,\n        \"expense_account\": null,\n        \"company\": null,\n        \"expense_category\": null\n      }\n    ]\n  }\n}\n```"
+      description: List Expense line items within a Project.
       summary: List
       tags:
       - 'Project Expenses: Line Items'
@@ -606,104 +516,7 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   schemas:
-    Expense_Line_Item_Delete_Tombstone:
-      type: object
-      properties:
-        deleted_transaction_uuid:
-          type: string
-          description: UUID of the Expense Transaction deleted because its final Expense was deleted.
-        deleted_expense_uuid:
-          type: string
-          description: UUID of the final Expense deleted from the Transaction.
-        message:
-          type: string
-          description: Human-readable explanation for why the parent Expense Transaction was deleted.
-      required:
-      - deleted_transaction_uuid
-      - deleted_expense_uuid
-      - message
-      title: Expense Line Item Delete Tombstone
-    Update_Expense_Line_Item_Request:
-      type: object
-      properties:
-        total_tax:
-          type:
-          - number
-          - 'null'
-          description: Total tax for the parent Transaction. When omitted, current Transaction tax is preserved and redistributed.
-        date:
-          type:
-          - string
-          - 'null'
-          description: Date this Expense was incurred in `YYYY-MM-DD` format.
-        invoice_number:
-          type:
-          - string
-          - 'null'
-          description: Invoice number entered for this Expense.
-        expense_account_uuid:
-          type:
-          - string
-          - 'null'
-          description: Expense Account UUID assigned to this Expense.
-        company_uuid:
-          type:
-          - string
-          - 'null'
-          description: Company/vendor UUID assigned to this Expense.
-        expense_category_uuid:
-          type:
-          - string
-          - 'null'
-          description: Expense Category UUID assigned to this Expense.
-        name:
-          type: string
-          description: Description of the purchased item or service. Omit the field to leave the name unchanged, but when present must contain a name.
-        class:
-          type:
-          - string
-          - 'null'
-          description: Expense classification.
-        amount:
-          type:
-          - number
-          - 'null'
-          description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
-      title: Update Expense Line Item Request
     Expense_Transaction:
       type: object
       properties:
@@ -759,32 +572,23 @@ components:
       - grand_total
       - expenses
       title: Expense Transaction
-    Expense_Line_Item_List:
+    Expense_Line_Item_Delete_Tombstone:
       type: object
       properties:
-        totals:
-          type: object
-          description: Sums across all Expense Line Items matching the request filters, before pagination.
-          properties:
-            amount:
-              type: number
-            tax:
-              type: number
-            total:
-              type: number
-          required:
-          - amount
-          - tax
-          - total
-        expenses:
-          type: array
-          description: Current page of Expense Line Items.
-          items:
-            $ref: '#/components/schemas/Expense_Line_Item'
+        deleted_transaction_uuid:
+          type: string
+          description: UUID of the Expense Transaction deleted because its final Expense was deleted.
+        deleted_expense_uuid:
+          type: string
+          description: UUID of the final Expense deleted from the Transaction.
+        message:
+          type: string
+          description: Human-readable explanation for why the parent Expense Transaction was deleted.
       required:
-      - totals
-      - expenses
-      title: Expense Line Item List
+      - deleted_transaction_uuid
+      - deleted_expense_uuid
+      - message
+      title: Expense Line Item Delete Tombstone
     Expense_Line_Item:
       type: object
       properties:
@@ -898,6 +702,112 @@ components:
       - company
       - expense_category
       title: Expense Line Item
+    Update_Expense_Line_Item_Request:
+      type: object
+      properties:
+        total_tax:
+          type:
+          - number
+          - 'null'
+          description: Total tax for the parent Transaction. When omitted, current Transaction tax is preserved and redistributed.
+        date:
+          type:
+          - string
+          - 'null'
+          description: Date this Expense was incurred in `YYYY-MM-DD` format.
+        invoice_number:
+          type:
+          - string
+          - 'null'
+          description: Invoice number entered for this Expense.
+        expense_account_uuid:
+          type:
+          - string
+          - 'null'
+          description: Expense Account UUID assigned to this Expense.
+        company_uuid:
+          type:
+          - string
+          - 'null'
+          description: Company/vendor UUID assigned to this Expense.
+        expense_category_uuid:
+          type:
+          - string
+          - 'null'
+          description: Expense Category UUID assigned to this Expense.
+        name:
+          type: string
+          description: Description of the purchased item or service. Omit the field to leave the name unchanged, but when present must contain a name.
+        class:
+          type:
+          - string
+          - 'null'
+          description: Expense classification.
+        amount:
+          type:
+          - number
+          - 'null'
+          description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
+      title: Update Expense Line Item Request
+    Expense_Line_Item_List:
+      type: object
+      properties:
+        totals:
+          type: object
+          description: Sums across all Expense Line Items matching the request filters, before pagination.
+          properties:
+            amount:
+              type: number
+            tax:
+              type: number
+            total:
+              type: number
+          required:
+          - amount
+          - tax
+          - total
+        expenses:
+          type: array
+          description: Current page of Expense Line Items.
+          items:
+            $ref: '#/components/schemas/Expense_Line_Item'
+      required:
+      - totals
+      - expenses
+      title: Expense Line Item List
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http
