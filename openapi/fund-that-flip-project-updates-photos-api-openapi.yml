@@ -232,52 +232,30 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    ModelNotFoundException:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
   schemas:
+    Project_Update__Photo:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier
+        order:
+          type: integer
+          description: 'Order number for displaying this photo relative to others.
+
+            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
+
+            A Photo with `order` of `5` should display before another Photo
+
+            with `order` of `10`.'
+        photo:
+          description: Photo details
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - order
+      - photo
+      title: 'Project Update: Photo'
     File:
       type: object
       properties:
@@ -339,29 +317,51 @@ components:
       - source_url
       - preview_url
       title: File
-    Project_Update__Photo:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier
-        order:
-          type: integer
-          description: 'Order number for displaying this photo relative to others.
-
-            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
-
-            A Photo with `order` of `5` should display before another Photo
-
-            with `order` of `10`.'
-        photo:
-          description: Photo details
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - order
-      - photo
-      title: 'Project Update: Photo'
+  responses:
+    ModelNotFoundException:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

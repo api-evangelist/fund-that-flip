@@ -449,40 +449,48 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
   schemas:
+    Receipt:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        created_at:
+          type: string
+          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          description: 'Date when the vendor issued the Receipt. Such as when it was
+
+            printed at the vendor''s point of sale. Date string formatted as
+
+            YYYY-MM-DD such as `2025-07-23`.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Any additional details about this Receipt
+        from_client:
+          type: string
+          description: 'Details on where this Receipt originated, such as the web application,
+
+            mobile application, or external integration.'
+        file:
+          description: Receipt file
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - created_at
+      - issue_date
+      - notes
+      - from_client
+      - file
+      title: Receipt
     File:
       type: object
       properties:
@@ -604,47 +612,39 @@ components:
           - 'null'
           description: (Optional) Details not captured in other fields.
       title: V1DocumentsReceiptUpdateRequest
-    Receipt:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        created_at:
-          type: string
-          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        issue_date:
-          type:
-          - string
-          - 'null'
-          description: 'Date when the vendor issued the Receipt. Such as when it was
-
-            printed at the vendor''s point of sale. Date string formatted as
-
-            YYYY-MM-DD such as `2025-07-23`.'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: Any additional details about this Receipt
-        from_client:
-          type: string
-          description: 'Details on where this Receipt originated, such as the web application,
-
-            mobile application, or external integration.'
-        file:
-          description: Receipt file
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - created_at
-      - issue_date
-      - notes
-      - from_client
-      - file
-      title: Receipt
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

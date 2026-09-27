@@ -45,14 +45,14 @@ modified: '2026-08-16'
 image: https://cdn.prod.website-files.com/64b99dfa2be98253c176ca3b/64fa2106537c70e46a8afb34_apple-touch-icon.png
 tags:
 - Company
-- Real-Estate
+- Real Estate
 - Lending
 - Construction
 - Project Management
-- Financial-Services
+- Financial Services
 - Investing
 - Fintech
-- Property Technology
+- PropTech
 - Accounting
 tags_raw:
 - Company
@@ -65,6 +65,8 @@ tags_raw:
 - Fintech
 - Property Technology
 - Accounting
+- Real-Estate
+- Financial-Services
 apis:
 - aid: fund-that-flip:fund-that-flip-activity-log-api
   name: Fund That Flip Activity Log API

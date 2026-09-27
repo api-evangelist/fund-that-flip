@@ -359,16 +359,6 @@ components:
           description: Human-readable financial account name used to group Expenses.
           maxLength: 191
       title: Update Expense Account Request
-    Create_Expense_Account_Request:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Human-readable financial account name used to group Expenses.
-          maxLength: 191
-      required:
-      - name
-      title: Create Expense Account Request
     Expense_Account:
       type: object
       properties:
@@ -398,6 +388,16 @@ components:
       - updated_at
       - name
       title: Expense Account
+    Create_Expense_Account_Request:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable financial account name used to group Expenses.
+          maxLength: 191
+      required:
+      - name
+      title: Create Expense Account Request
   responses:
     AuthenticationException:
       description: Unauthenticated

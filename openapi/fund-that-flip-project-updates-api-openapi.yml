@@ -418,52 +418,29 @@ paths:
                     - null
 components:
   schemas:
-    V1ProjectProgressUpdateRequest:
+    Project_Update__Photo:
       type: object
       properties:
-        title:
-          type:
-          - string
-          - 'null'
-          description: Sentence summarizing the contents of the update.
-        description:
+        uuid:
           type: string
-          description: 'Description of what''s new with the Project. Basic HTML formatting is supported. For example:
+          description: Unique identifier
+        order:
+          type: integer
+          description: 'Order number for displaying this photo relative to others.
 
+            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
 
-            - Formatting: `p, b, i`
+            A Photo with `order` of `5` should display before another Photo
 
-            - Spacing: `p, div`
-
-            - Header: `h2, h3`
-
-            - Link: `<a href="...">`
-
-            - Image: `<img src="...">`
-
-
-            CSS and JavaScript are not supported.
-
-
-            All HTML is sanitized and rewritten for security purposes. We
-
-            will likely modify the HTML you send to display properly across
-
-            the application.'
-        posted_at:
-          type: string
-          description: 'Timestamp used to order/sort the Updates in ISO 8601 Zulu format.
-
-            Example: `2025-04-30T21:21:10Z` -- NOTE: An Update with a
-
-            timestamp in the future will display immediately. It will appear
-
-            as the date and time given. This field is really only used for ordering.'
+            with `order` of `10`.'
+        photo:
+          description: Photo details
+          $ref: '#/components/schemas/File'
       required:
-      - title
-      - description
-      - posted_at
-      title: V1ProjectProgressUpdateRequest
+      - uuid
+      - order
+      - photo
+      title: 'Project Update: Photo'
     Project_Update:
       type: object
       properties:
@@ -579,29 +556,6 @@ components:
       - source_url
       - preview_url
       title: File
-    Project_Update__Photo:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier
-        order:
-          type: integer
-          description: 'Order number for displaying this photo relative to others.
-
-            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
-
-            A Photo with `order` of `5` should display before another Photo
-
-            with `order` of `10`.'
-        photo:
-          description: Photo details
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - order
-      - photo
-      title: 'Project Update: Photo'
     User:
       type: object
       properties:
@@ -626,6 +580,52 @@ components:
       - email
       - avatar
       title: User
+    V1ProjectProgressUpdateRequest:
+      type: object
+      properties:
+        title:
+          type:
+          - string
+          - 'null'
+          description: Sentence summarizing the contents of the update.
+        description:
+          type: string
+          description: 'Description of what''s new with the Project. Basic HTML formatting is supported. For example:
+
+
+            - Formatting: `p, b, i`
+
+            - Spacing: `p, div`
+
+            - Header: `h2, h3`
+
+            - Link: `<a href="...">`
+
+            - Image: `<img src="...">`
+
+
+            CSS and JavaScript are not supported.
+
+
+            All HTML is sanitized and rewritten for security purposes. We
+
+            will likely modify the HTML you send to display properly across
+
+            the application.'
+        posted_at:
+          type: string
+          description: 'Timestamp used to order/sort the Updates in ISO 8601 Zulu format.
+
+            Example: `2025-04-30T21:21:10Z` -- NOTE: An Update with a
+
+            timestamp in the future will display immediately. It will appear
+
+            as the date and time given. This field is really only used for ordering.'
+      required:
+      - title
+      - description
+      - posted_at
+      title: V1ProjectProgressUpdateRequest
   responses:
     AuthenticationException:
       description: Unauthenticated

@@ -343,6 +343,182 @@ paths:
                     - null
 components:
   schemas:
+    V1ProjectCreateRequest:
+      type: object
+      properties:
+        fetch_property_data:
+          type: boolean
+          description: 'Your FlipperForce Subscription includes access to nationwide data on over 150+ million properties across the United States. [See examples of this data.](https://www.flipperforce.com/software-features/property-data) Pass the flag `fetch_property_data: true` to automatically search for Property Specs, Owner Information, Property History, Sales History and more using this Project''s address.
+
+
+            Fetching property data will increase API call processing time. If you are creating many Projects, omit this flag to maximize throughput without searching for property data.'
+        name:
+          type: string
+          description: Projects are referenced by their Name throughout the software, such as in lists of Projects or search boxes. Many people use the Address like "123 Main Street" but add as much detail as needed.
+          maxLength: 191
+        description:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Catch-all details about the Project that do not fit into other available fields.
+          maxLength: 999999
+        address_1:
+          type: string
+          description: Address - Line 1. For example, "123 NE Main Street".
+          maxLength: 191
+        address_2:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Address - Line 2. For example, "Unit 421". Leave empty for most addresses.
+          maxLength: 191
+        city:
+          type: string
+          description: Address - City or Municipality
+          maxLength: 191
+        state:
+          type: string
+          description: Address - State or Region. For US-based addresses, submit the 2-letter state code. Such as `FL` for Florida.
+          maxLength: 191
+        postal_code:
+          type: string
+          description: Address - Zip Code or Postal Code. For US-based addresses, submit the 5-digit zip code. Such as `33130` for Miami, FL.
+          maxLength: 191
+        country:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Address - Country is the 2-character country code. Defaults to `US` for the United States if no value is submitted. Only accepts [ISO 3166 ALPHA-2 values](https://www.iban.com/country-codes).
+          minLength: 2
+          maxLength: 2
+        investment_strategy:
+          anyOf:
+          - description: '(Optional) Investment Strategy is the real estate strategy being used to generate a profit, such as a flip, rental, or wholesale. Defaults to Fix and Flip if no value is submitted.
+
+
+              Only accepts the following values:
+
+
+              **Flip:**
+
+
+              * `fix_and_flip` - Fix and Flip
+
+              * `wholesale` - Wholesale
+
+              * `wholetail` - Wholetail
+
+
+              **New Construction:**
+
+
+              * `build_to_rent` - Build to Rent
+
+              * `new_construction` - Build to Sell
+
+
+              **Rental:**
+
+
+              * `brrrr` - BRRRR
+
+              * `buy_and_hold` - Buy and Hold
+
+              * `rental` - Rental
+
+              * `short_term_rental` - Short Term Rental
+
+
+              **Other:**
+
+
+              * `other` - Other'
+            $ref: '#/components/schemas/ProjectStrategy'
+          - type: 'null'
+        stage:
+          description: '(Optional) Pipeline Stage controls which phase of the Project workflow this Project is in. Projects start as leads, then track renovation and construction, and finally being sold or retained for a portfolio. Defaults to `lead` Stage if no value is submitted.
+
+
+            Only accepts the following values:
+
+
+            **Lead Pipeline:**
+
+
+            * `lead` - New Lead
+
+            * `contacting_seller` - Contacting Seller
+
+            * `appointment_set` - Appointment Set
+
+            * `offer_made` - Offer Made
+
+            * `negotiation` - Negotiating
+
+            * `pending_purchase` - Pending Purchase
+
+
+            **Active Project Pipeline:**
+
+
+            * `construction_on_hold` - Construction On-Hold
+
+            * `planning_permitting` - Planning/Permitting
+
+            * `under_construction` - Under Construction
+
+            * `punch_list` - Punch List
+
+            * `active_listing` - Active Listing
+
+            * `pending_sale` - Pending Sale
+
+
+            **Portfolio:**
+
+
+            * `completed_portfolio` - Completed/Sold
+
+            * `rental_inventory` - Rental Inventory
+
+            * `wholesale_inventory` - Wholesale Inventory'
+          $ref: '#/components/schemas/ProjectPipelineStage'
+        type:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Property Type describes the kind of structure. Such as Single Family, Duplex, Quadplex, Apartment Building, etc.
+          maxLength: 191
+        style:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Property Style such as Ranch, Split Level, Two-Story, Three-Story, Condo, etc.
+          maxLength: 191
+      required:
+      - name
+      - address_1
+      - city
+      - state
+      - postal_code
+      title: V1ProjectCreateRequest
+    ProjectStrategy:
+      type: string
+      description: 'Project Investment Strategy.
+
+        '
+      enum:
+      - brrrr
+      - build_to_rent
+      - buy_and_hold
+      - fix_and_flip
+      - new_construction
+      - other
+      - rental
+      - short_term_rental
+      - wholesale
+      - wholetail
+      title: ProjectStrategy
     Project:
       type: object
       properties:
@@ -545,182 +721,6 @@ components:
       - featured_image_url
       - permissions
       title: Project
-    V1ProjectCreateRequest:
-      type: object
-      properties:
-        fetch_property_data:
-          type: boolean
-          description: 'Your FlipperForce Subscription includes access to nationwide data on over 150+ million properties across the United States. [See examples of this data.](https://www.flipperforce.com/software-features/property-data) Pass the flag `fetch_property_data: true` to automatically search for Property Specs, Owner Information, Property History, Sales History and more using this Project''s address.
-
-
-            Fetching property data will increase API call processing time. If you are creating many Projects, omit this flag to maximize throughput without searching for property data.'
-        name:
-          type: string
-          description: Projects are referenced by their Name throughout the software, such as in lists of Projects or search boxes. Many people use the Address like "123 Main Street" but add as much detail as needed.
-          maxLength: 191
-        description:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Catch-all details about the Project that do not fit into other available fields.
-          maxLength: 999999
-        address_1:
-          type: string
-          description: Address - Line 1. For example, "123 NE Main Street".
-          maxLength: 191
-        address_2:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Address - Line 2. For example, "Unit 421". Leave empty for most addresses.
-          maxLength: 191
-        city:
-          type: string
-          description: Address - City or Municipality
-          maxLength: 191
-        state:
-          type: string
-          description: Address - State or Region. For US-based addresses, submit the 2-letter state code. Such as `FL` for Florida.
-          maxLength: 191
-        postal_code:
-          type: string
-          description: Address - Zip Code or Postal Code. For US-based addresses, submit the 5-digit zip code. Such as `33130` for Miami, FL.
-          maxLength: 191
-        country:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Address - Country is the 2-character country code. Defaults to `US` for the United States if no value is submitted. Only accepts [ISO 3166 ALPHA-2 values](https://www.iban.com/country-codes).
-          minLength: 2
-          maxLength: 2
-        investment_strategy:
-          anyOf:
-          - description: '(Optional) Investment Strategy is the real estate strategy being used to generate a profit, such as a flip, rental, or wholesale. Defaults to Fix and Flip if no value is submitted.
-
-
-              Only accepts the following values:
-
-
-              **Flip:**
-
-
-              * `fix_and_flip` - Fix and Flip
-
-              * `wholesale` - Wholesale
-
-              * `wholetail` - Wholetail
-
-
-              **New Construction:**
-
-
-              * `build_to_rent` - Build to Rent
-
-              * `new_construction` - Build to Sell
-
-
-              **Rental:**
-
-
-              * `brrrr` - BRRRR
-
-              * `buy_and_hold` - Buy and Hold
-
-              * `rental` - Rental
-
-              * `short_term_rental` - Short Term Rental
-
-
-              **Other:**
-
-
-              * `other` - Other'
-            $ref: '#/components/schemas/ProjectStrategy'
-          - type: 'null'
-        stage:
-          description: '(Optional) Pipeline Stage controls which phase of the Project workflow this Project is in. Projects start as leads, then track renovation and construction, and finally being sold or retained for a portfolio. Defaults to `lead` Stage if no value is submitted.
-
-
-            Only accepts the following values:
-
-
-            **Lead Pipeline:**
-
-
-            * `lead` - New Lead
-
-            * `contacting_seller` - Contacting Seller
-
-            * `appointment_set` - Appointment Set
-
-            * `offer_made` - Offer Made
-
-            * `negotiation` - Negotiating
-
-            * `pending_purchase` - Pending Purchase
-
-
-            **Active Project Pipeline:**
-
-
-            * `construction_on_hold` - Construction On-Hold
-
-            * `planning_permitting` - Planning/Permitting
-
-            * `under_construction` - Under Construction
-
-            * `punch_list` - Punch List
-
-            * `active_listing` - Active Listing
-
-            * `pending_sale` - Pending Sale
-
-
-            **Portfolio:**
-
-
-            * `completed_portfolio` - Completed/Sold
-
-            * `rental_inventory` - Rental Inventory
-
-            * `wholesale_inventory` - Wholesale Inventory'
-          $ref: '#/components/schemas/ProjectPipelineStage'
-        type:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Property Type describes the kind of structure. Such as Single Family, Duplex, Quadplex, Apartment Building, etc.
-          maxLength: 191
-        style:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Property Style such as Ranch, Split Level, Two-Story, Three-Story, Condo, etc.
-          maxLength: 191
-      required:
-      - name
-      - address_1
-      - city
-      - state
-      - postal_code
-      title: V1ProjectCreateRequest
-    ProjectStrategy:
-      type: string
-      description: 'Project Investment Strategy.
-
-        '
-      enum:
-      - brrrr
-      - build_to_rent
-      - buy_and_hold
-      - fix_and_flip
-      - new_construction
-      - other
-      - rental
-      - short_term_rental
-      - wholesale
-      - wholetail
-      title: ProjectStrategy
     V1ProjectUpdateRequest:
       type: object
       properties:

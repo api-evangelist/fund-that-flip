@@ -517,61 +517,79 @@ paths:
                     - null
 components:
   schemas:
-    Expense_Transaction:
+    Expense_Line_Item_List:
       type: object
       properties:
-        uuid:
-          type: string
-          description: Public identifier.
-        created_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp when Expense Transaction was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2026-06-07T16:20:00.123456Z`'
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp when Expense Transaction was last changed in ISO 8601 Zulu format with microseconds.
-
-            Example: `2026-06-07T16:20:00.123456Z`'
-        sequence_number:
-          type:
-          - integer
-          - 'null'
-          description: Project-scoped sequence number shown in the web app as `T#`.
-        receipt_uuid:
-          type:
-          - string
-          - 'null'
-          description: Receipt UUID associated with this Expense Transaction.
-        subtotal:
-          type: number
-          description: Sum of Expense amounts before tax, in dollars. Such as `1234.56`
-        total_tax:
-          type: number
-          description: Sum of tax values from all Expenses, in dollars. Such as `1234.56`
-        grand_total:
-          type: number
-          description: Sum of Expense totals including tax, in dollars. Such as `1234.56`
+        totals:
+          type: object
+          description: Sums across all Expense Line Items matching the request filters, before pagination.
+          properties:
+            amount:
+              type: number
+            tax:
+              type: number
+            total:
+              type: number
+          required:
+          - amount
+          - tax
+          - total
         expenses:
           type: array
-          description: Expense line items belonging to this Expense Transaction.
+          description: Current page of Expense Line Items.
           items:
             $ref: '#/components/schemas/Expense_Line_Item'
       required:
-      - uuid
-      - created_at
-      - updated_at
-      - sequence_number
-      - receipt_uuid
-      - subtotal
-      - total_tax
-      - grand_total
+      - totals
       - expenses
-      title: Expense Transaction
+      title: Expense Line Item List
+    Update_Expense_Line_Item_Request:
+      type: object
+      properties:
+        total_tax:
+          type:
+          - number
+          - 'null'
+          description: Total tax for the parent Transaction. When omitted, current Transaction tax is preserved and redistributed.
+        date:
+          type:
+          - string
+          - 'null'
+          description: Date this Expense was incurred in `YYYY-MM-DD` format.
+        invoice_number:
+          type:
+          - string
+          - 'null'
+          description: Invoice number entered for this Expense.
+        expense_account_uuid:
+          type:
+          - string
+          - 'null'
+          description: Expense Account UUID assigned to this Expense.
+        company_uuid:
+          type:
+          - string
+          - 'null'
+          description: Company/vendor UUID assigned to this Expense.
+        expense_category_uuid:
+          type:
+          - string
+          - 'null'
+          description: Expense Category UUID assigned to this Expense.
+        name:
+          type: string
+          description: Description of the purchased item or service. Omit the field to leave the name unchanged, but when present must contain a name.
+        class:
+          type:
+          - string
+          - 'null'
+          description: Expense classification.
+        amount:
+          type:
+          - number
+          - 'null'
+          description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
+      title: Update Expense Line Item Request
     Expense_Line_Item_Delete_Tombstone:
       type: object
       properties:
@@ -702,79 +720,61 @@ components:
       - company
       - expense_category
       title: Expense Line Item
-    Update_Expense_Line_Item_Request:
+    Expense_Transaction:
       type: object
       properties:
-        total_tax:
-          type:
-          - number
-          - 'null'
-          description: Total tax for the parent Transaction. When omitted, current Transaction tax is preserved and redistributed.
-        date:
-          type:
-          - string
-          - 'null'
-          description: Date this Expense was incurred in `YYYY-MM-DD` format.
-        invoice_number:
-          type:
-          - string
-          - 'null'
-          description: Invoice number entered for this Expense.
-        expense_account_uuid:
-          type:
-          - string
-          - 'null'
-          description: Expense Account UUID assigned to this Expense.
-        company_uuid:
-          type:
-          - string
-          - 'null'
-          description: Company/vendor UUID assigned to this Expense.
-        expense_category_uuid:
-          type:
-          - string
-          - 'null'
-          description: Expense Category UUID assigned to this Expense.
-        name:
+        uuid:
           type: string
-          description: Description of the purchased item or service. Omit the field to leave the name unchanged, but when present must contain a name.
-        class:
+          description: Public identifier.
+        created_at:
           type:
           - string
           - 'null'
-          description: Expense classification.
-        amount:
+          description: 'Timestamp when Expense Transaction was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        updated_at:
           type:
-          - number
+          - string
           - 'null'
-          description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
-      title: Update Expense Line Item Request
-    Expense_Line_Item_List:
-      type: object
-      properties:
-        totals:
-          type: object
-          description: Sums across all Expense Line Items matching the request filters, before pagination.
-          properties:
-            amount:
-              type: number
-            tax:
-              type: number
-            total:
-              type: number
-          required:
-          - amount
-          - tax
-          - total
+          description: 'Timestamp when Expense Transaction was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        sequence_number:
+          type:
+          - integer
+          - 'null'
+          description: Project-scoped sequence number shown in the web app as `T#`.
+        receipt_uuid:
+          type:
+          - string
+          - 'null'
+          description: Receipt UUID associated with this Expense Transaction.
+        subtotal:
+          type: number
+          description: Sum of Expense amounts before tax, in dollars. Such as `1234.56`
+        total_tax:
+          type: number
+          description: Sum of tax values from all Expenses, in dollars. Such as `1234.56`
+        grand_total:
+          type: number
+          description: Sum of Expense totals including tax, in dollars. Such as `1234.56`
         expenses:
           type: array
-          description: Current page of Expense Line Items.
+          description: Expense line items belonging to this Expense Transaction.
           items:
             $ref: '#/components/schemas/Expense_Line_Item'
       required:
-      - totals
+      - uuid
+      - created_at
+      - updated_at
+      - sequence_number
+      - receipt_uuid
+      - subtotal
+      - total_tax
+      - grand_total
       - expenses
-      title: Expense Line Item List
+      title: Expense Transaction
   responses:
     AuthenticationException:
       description: Unauthenticated
