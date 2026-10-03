@@ -381,6 +381,38 @@ paths:
                     - null
 components:
   schemas:
+    Project_Photo_Log__Date_Group:
+      type: object
+      properties:
+        group_date:
+          type: string
+          description: Photos should display in a group titled by this date. In format `YYYY-MM-DD`
+        photos:
+          type: array
+          description: Photos grouped by this date
+          items:
+            $ref: '#/components/schemas/Project_Photo_Log__Photo'
+      required:
+      - group_date
+      - photos
+      title: 'Project Photo Log: Date Group'
+    V1PhotoLogUpdateRequest:
+      type: object
+      properties:
+        photo_date:
+          type: string
+          format: date
+          description: 'Optional. Date this Photo was captured. Photos with the same
+
+            Date display ordered next to each other in the Photo Log.'
+        photo_description:
+          type:
+          - string
+          - 'null'
+          description: 'Optional. Text displayed alongside the photo. Useful for
+
+            communicating more context about what is in the photo.'
+      title: V1PhotoLogUpdateRequest
     Project_Photo_Log:
       type: object
       properties:
@@ -391,6 +423,53 @@ components:
       required:
       - photos_by_date
       title: Project Photo Log
+    Project_Photo_Log__Photo:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Identifier
+        order:
+          type: integer
+          description: 'Sequence position of this Photo relative to other Photos with
+
+            the same Photo Date. Smaller numbers will display before larger
+
+            numbers. Often this is the Unix timestamp of when the Photo was
+
+            captured. But if the photos have been manually re-ordered, the
+
+            order will begin from 0 and increment by 1. If two photos have
+
+            the same order, photos created more recently will display first.'
+        created_at:
+          type: string
+          description: 'Timestamp when Photo was added to Photo Log in ISO 8601 Zulu
+
+            format with microseconds. Example: `2025-04-30T21:21:10.123456Z`'
+        photo_date:
+          type: string
+          description: Date Group where this Photo is organized. In format `YYYY-MM-DD`
+        photo_description:
+          type:
+          - string
+          - 'null'
+          description: 'Text displayed alongside the photo. Useful for communicating more
+
+            context about what is in the photo or that the viewer would find informative.'
+        photo:
+          description: 'Details about a single Photo, such as URLs for displaying it
+
+            at various sizes'
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - order
+      - created_at
+      - photo_date
+      - photo_description
+      - photo
+      title: 'Project Photo Log: Photo'
     File:
       type: object
       properties:
@@ -452,98 +531,7 @@ components:
       - source_url
       - preview_url
       title: File
-    Project_Photo_Log__Photo:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public Identifier
-        order:
-          type: integer
-          description: 'Sequence position of this Photo relative to other Photos with
-
-            the same Photo Date. Smaller numbers will display before larger
-
-            numbers. Often this is the Unix timestamp of when the Photo was
-
-            captured. But if the photos have been manually re-ordered, the
-
-            order will begin from 0 and increment by 1. If two photos have
-
-            the same order, photos created more recently will display first.'
-        created_at:
-          type: string
-          description: 'Timestamp when Photo was added to Photo Log in ISO 8601 Zulu
-
-            format with microseconds. Example: `2025-04-30T21:21:10.123456Z`'
-        photo_date:
-          type: string
-          description: Date Group where this Photo is organized. In format `YYYY-MM-DD`
-        photo_description:
-          type:
-          - string
-          - 'null'
-          description: 'Text displayed alongside the photo. Useful for communicating more
-
-            context about what is in the photo or that the viewer would find informative.'
-        photo:
-          description: 'Details about a single Photo, such as URLs for displaying it
-
-            at various sizes'
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - order
-      - created_at
-      - photo_date
-      - photo_description
-      - photo
-      title: 'Project Photo Log: Photo'
-    V1PhotoLogUpdateRequest:
-      type: object
-      properties:
-        photo_date:
-          type: string
-          format: date
-          description: 'Optional. Date this Photo was captured. Photos with the same
-
-            Date display ordered next to each other in the Photo Log.'
-        photo_description:
-          type:
-          - string
-          - 'null'
-          description: 'Optional. Text displayed alongside the photo. Useful for
-
-            communicating more context about what is in the photo.'
-      title: V1PhotoLogUpdateRequest
-    Project_Photo_Log__Date_Group:
-      type: object
-      properties:
-        group_date:
-          type: string
-          description: Photos should display in a group titled by this date. In format `YYYY-MM-DD`
-        photos:
-          type: array
-          description: Photos grouped by this date
-          items:
-            $ref: '#/components/schemas/Project_Photo_Log__Photo'
-      required:
-      - group_date
-      - photos
-      title: 'Project Photo Log: Date Group'
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -564,6 +552,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

@@ -517,32 +517,23 @@ paths:
                     - null
 components:
   schemas:
-    Expense_Line_Item_List:
+    Expense_Line_Item_Delete_Tombstone:
       type: object
       properties:
-        totals:
-          type: object
-          description: Sums across all Expense Line Items matching the request filters, before pagination.
-          properties:
-            amount:
-              type: number
-            tax:
-              type: number
-            total:
-              type: number
-          required:
-          - amount
-          - tax
-          - total
-        expenses:
-          type: array
-          description: Current page of Expense Line Items.
-          items:
-            $ref: '#/components/schemas/Expense_Line_Item'
+        deleted_transaction_uuid:
+          type: string
+          description: UUID of the Expense Transaction deleted because its final Expense was deleted.
+        deleted_expense_uuid:
+          type: string
+          description: UUID of the final Expense deleted from the Transaction.
+        message:
+          type: string
+          description: Human-readable explanation for why the parent Expense Transaction was deleted.
       required:
-      - totals
-      - expenses
-      title: Expense Line Item List
+      - deleted_transaction_uuid
+      - deleted_expense_uuid
+      - message
+      title: Expense Line Item Delete Tombstone
     Update_Expense_Line_Item_Request:
       type: object
       properties:
@@ -590,23 +581,61 @@ components:
           - 'null'
           description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
       title: Update Expense Line Item Request
-    Expense_Line_Item_Delete_Tombstone:
+    Expense_Transaction:
       type: object
       properties:
-        deleted_transaction_uuid:
+        uuid:
           type: string
-          description: UUID of the Expense Transaction deleted because its final Expense was deleted.
-        deleted_expense_uuid:
-          type: string
-          description: UUID of the final Expense deleted from the Transaction.
-        message:
-          type: string
-          description: Human-readable explanation for why the parent Expense Transaction was deleted.
+          description: Public identifier.
+        created_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp when Expense Transaction was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp when Expense Transaction was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        sequence_number:
+          type:
+          - integer
+          - 'null'
+          description: Project-scoped sequence number shown in the web app as `T#`.
+        receipt_uuid:
+          type:
+          - string
+          - 'null'
+          description: Receipt UUID associated with this Expense Transaction.
+        subtotal:
+          type: number
+          description: Sum of Expense amounts before tax, in dollars. Such as `1234.56`
+        total_tax:
+          type: number
+          description: Sum of tax values from all Expenses, in dollars. Such as `1234.56`
+        grand_total:
+          type: number
+          description: Sum of Expense totals including tax, in dollars. Such as `1234.56`
+        expenses:
+          type: array
+          description: Expense line items belonging to this Expense Transaction.
+          items:
+            $ref: '#/components/schemas/Expense_Line_Item'
       required:
-      - deleted_transaction_uuid
-      - deleted_expense_uuid
-      - message
-      title: Expense Line Item Delete Tombstone
+      - uuid
+      - created_at
+      - updated_at
+      - sequence_number
+      - receipt_uuid
+      - subtotal
+      - total_tax
+      - grand_total
+      - expenses
+      title: Expense Transaction
     Expense_Line_Item:
       type: object
       properties:
@@ -720,74 +749,33 @@ components:
       - company
       - expense_category
       title: Expense Line Item
-    Expense_Transaction:
+    Expense_Line_Item_List:
       type: object
       properties:
-        uuid:
-          type: string
-          description: Public identifier.
-        created_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp when Expense Transaction was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2026-06-07T16:20:00.123456Z`'
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp when Expense Transaction was last changed in ISO 8601 Zulu format with microseconds.
-
-            Example: `2026-06-07T16:20:00.123456Z`'
-        sequence_number:
-          type:
-          - integer
-          - 'null'
-          description: Project-scoped sequence number shown in the web app as `T#`.
-        receipt_uuid:
-          type:
-          - string
-          - 'null'
-          description: Receipt UUID associated with this Expense Transaction.
-        subtotal:
-          type: number
-          description: Sum of Expense amounts before tax, in dollars. Such as `1234.56`
-        total_tax:
-          type: number
-          description: Sum of tax values from all Expenses, in dollars. Such as `1234.56`
-        grand_total:
-          type: number
-          description: Sum of Expense totals including tax, in dollars. Such as `1234.56`
+        totals:
+          type: object
+          description: Sums across all Expense Line Items matching the request filters, before pagination.
+          properties:
+            amount:
+              type: number
+            tax:
+              type: number
+            total:
+              type: number
+          required:
+          - amount
+          - tax
+          - total
         expenses:
           type: array
-          description: Expense line items belonging to this Expense Transaction.
+          description: Current page of Expense Line Items.
           items:
             $ref: '#/components/schemas/Expense_Line_Item'
       required:
-      - uuid
-      - created_at
-      - updated_at
-      - sequence_number
-      - receipt_uuid
-      - subtotal
-      - total_tax
-      - grand_total
+      - totals
       - expenses
-      title: Expense Transaction
+      title: Expense Line Item List
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -808,6 +796,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

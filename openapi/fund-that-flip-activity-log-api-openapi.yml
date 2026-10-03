@@ -407,42 +407,6 @@ paths:
                     - null
 components:
   schemas:
-    Activity_Log_Project_Filter:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public Project identifier accepted by `project_uuids[]`.
-        label:
-          type: string
-          description: Project name.
-      required:
-      - uuid
-      - label
-      title: Activity Log Project Filter
-    Activity_Log_Filters:
-      type: object
-      properties:
-        projects:
-          type: array
-          description: Projects referenced by visible Activity Log history and available to the account.
-          items:
-            $ref: '#/components/schemas/Activity_Log_Project_Filter'
-        users:
-          type: array
-          description: Current Workspace Users and historical actors, including current Users without Activity Log history.
-          items:
-            $ref: '#/components/schemas/Activity_Log_User_Filter'
-        activity_types:
-          type: array
-          description: Activity Type values present in visible Workspace history and accepted by `activity_types[]`.
-          items:
-            type: string
-      required:
-      - projects
-      - users
-      - activity_types
-      title: Activity Log Filters
     Activity_Log_Target_Links:
       type: object
       properties:
@@ -454,37 +418,31 @@ components:
       required:
       - self
       title: Activity Log Target Links
-    Activity_Log_User_Filter:
+    Activity_Log_Target:
       type: object
       properties:
+        type:
+          type: string
+          description: Stable machine-readable resource type, such as `project` or `project_status`.
         uuid:
-          type: string
-          description: Public User identifier accepted by `user_uuids[]`.
-        label:
-          type: string
-          description: User's full name.
-      required:
-      - uuid
-      - label
-      title: Activity Log User Filter
-    Activity_Log_Project_Context:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public Project identifier.
+          type:
+          - string
+          - 'null'
+          description: Public resource identifier, or null when the target does not support locating by UUID in the API.
         name:
-          type: string
-          description: Project display name.
+          type:
+          - string
+          - 'null'
+          description: Display name captured for the activity.
+        links:
+          description: URLs for Public API resources related to this target.
+          $ref: '#/components/schemas/Activity_Log_Target_Links'
       required:
+      - type
       - uuid
       - name
-      title: Activity Log Project Context
-    Activity_Log_List:
-      type: array
-      items:
-        $ref: '#/components/schemas/Activity_Log'
-      title: Activity Log List
+      - links
+      title: Activity Log Target
     Activity_Log:
       type: object
       properties:
@@ -530,31 +488,19 @@ components:
       - targets
       - details
       title: Activity Log
-    Activity_Log_Target:
+    Activity_Log_Project_Context:
       type: object
       properties:
-        type:
-          type: string
-          description: Stable machine-readable resource type, such as `project` or `project_status`.
         uuid:
-          type:
-          - string
-          - 'null'
-          description: Public resource identifier, or null when the target does not support locating by UUID in the API.
+          type: string
+          description: Public Project identifier.
         name:
-          type:
-          - string
-          - 'null'
-          description: Display name captured for the activity.
-        links:
-          description: URLs for Public API resources related to this target.
-          $ref: '#/components/schemas/Activity_Log_Target_Links'
+          type: string
+          description: Project display name.
       required:
-      - type
       - uuid
       - name
-      - links
-      title: Activity Log Target
+      title: Activity Log Project Context
     Activity_Log_Actor:
       type: object
       properties:
@@ -568,19 +514,61 @@ components:
       - uuid
       - name
       title: Activity Log Actor
+    Activity_Log_List:
+      type: array
+      items:
+        $ref: '#/components/schemas/Activity_Log'
+      title: Activity Log List
+    Activity_Log_Filters:
+      type: object
+      properties:
+        projects:
+          type: array
+          description: Projects referenced by visible Activity Log history and available to the account.
+          items:
+            $ref: '#/components/schemas/Activity_Log_Project_Filter'
+        users:
+          type: array
+          description: Current Workspace Users and historical actors, including current Users without Activity Log history.
+          items:
+            $ref: '#/components/schemas/Activity_Log_User_Filter'
+        activity_types:
+          type: array
+          description: Activity Type values present in visible Workspace history and accepted by `activity_types[]`.
+          items:
+            type: string
+      required:
+      - projects
+      - users
+      - activity_types
+      title: Activity Log Filters
+    Activity_Log_User_Filter:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public User identifier accepted by `user_uuids[]`.
+        label:
+          type: string
+          description: User's full name.
+      required:
+      - uuid
+      - label
+      title: Activity Log User Filter
+    Activity_Log_Project_Filter:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Project identifier accepted by `project_uuids[]`.
+        label:
+          type: string
+          description: Project name.
+      required:
+      - uuid
+      - label
+      title: Activity Log Project Filter
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -601,6 +589,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

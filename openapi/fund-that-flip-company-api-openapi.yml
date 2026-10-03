@@ -443,7 +443,258 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
+  responses:
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   schemas:
+    V1CompanyCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable Company name.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Email address for this Company.
+        license_id:
+          type:
+          - string
+          - 'null'
+          description: License Number, such as a contractor or trade license number.
+        address_1:
+          type:
+          - string
+          - 'null'
+          description: 'Address - Line 1. Example: `123 N Main Street`'
+        address_2:
+          type:
+          - string
+          - 'null'
+          description: Address - Line 2.
+        city:
+          type:
+          - string
+          - 'null'
+          description: Municipality where this Company is located.
+        region:
+          type:
+          - string
+          - 'null'
+          description: State, province, or region where this Company is located.
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: Zip code, postal code, or similar where this Company is located.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country where this Company is located.
+        phone:
+          type:
+          - string
+          - 'null'
+          description: Phone Number
+        website:
+          type:
+          - string
+          - 'null'
+          description: URL
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Your internal notes about this Company.
+        rating:
+          type:
+          - integer
+          - 'null'
+          description: Track how many "stars" from 1 to 5 you would give this Company.
+        review:
+          type:
+          - string
+          - 'null'
+          description: Details about your past working relationship with this Company.
+        tax_id:
+          type:
+          - string
+          - 'null'
+          description: Tax Identifier, such as EIN (Federal Tax ID) that is useful when issuing 1099 Forms.
+        is_1099_eligible:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this Company is eligible to receive 1099 tax forms.
+        workers_comp_insurance:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this Company has Workers' Compensation insurance.
+        workers_comp_insurance_expiration:
+          type:
+          - string
+          - 'null'
+          description: Workers' Compensation insurance expiration date in `YYYY-MM-DD` format.
+        general_liability_insurance:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this Company has General Liability insurance.
+        general_liability_insurance_expiration:
+          type:
+          - string
+          - 'null'
+          description: General Liability insurance expiration date in `YYYY-MM-DD` format.
+        category_uuids:
+          type: array
+          description: Company Category UUIDs to assign to this Company.
+          items:
+            type: string
+            description: Company Category UUID assigned to this Company.
+      required:
+      - name
+      title: V1CompanyCreateRequest
+    V1CompanyUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable Company name.
+        email:
+          type:
+          - string
+          - 'null'
+          description: Email address for this Company.
+        license_id:
+          type:
+          - string
+          - 'null'
+          description: License Number, such as a contractor or trade license number.
+        address_1:
+          type:
+          - string
+          - 'null'
+          description: 'Address - Line 1. Example: `123 N Main Street`'
+        address_2:
+          type:
+          - string
+          - 'null'
+          description: Address - Line 2.
+        city:
+          type:
+          - string
+          - 'null'
+          description: Municipality where this Company is located.
+        region:
+          type:
+          - string
+          - 'null'
+          description: State, province, or region where this Company is located.
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: Zip code, postal code, or similar where this Company is located.
+        country:
+          type:
+          - string
+          - 'null'
+          description: Country where this Company is located.
+        phone:
+          type:
+          - string
+          - 'null'
+          description: Phone Number
+        website:
+          type:
+          - string
+          - 'null'
+          description: URL
+        notes:
+          type:
+          - string
+          - 'null'
+          description: Your internal notes about this Company.
+        rating:
+          type:
+          - integer
+          - 'null'
+          description: Track how many "stars" from 1 to 5 you would give this Company.
+        review:
+          type:
+          - string
+          - 'null'
+          description: Details about your past working relationship with this Company.
+        tax_id:
+          type:
+          - string
+          - 'null'
+          description: Tax Identifier, such as EIN (Federal Tax ID) that is useful when issuing 1099 Forms.
+        is_1099_eligible:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this Company is eligible to receive 1099 tax forms.
+        workers_comp_insurance:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this Company has Workers' Compensation insurance.
+        workers_comp_insurance_expiration:
+          type:
+          - string
+          - 'null'
+          description: Workers' Compensation insurance expiration date in `YYYY-MM-DD` format.
+        general_liability_insurance:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this Company has General Liability insurance.
+        general_liability_insurance_expiration:
+          type:
+          - string
+          - 'null'
+          description: General Liability insurance expiration date in `YYYY-MM-DD` format.
+        category_uuids:
+          type: array
+          description: Company Category UUIDs to assign to this Company. Submit an empty array to remove all categories.
+          items:
+            type: string
+            description: Company Category UUID assigned to this Company.
+      title: V1CompanyUpdateRequest
     Company:
       type: object
       properties:
@@ -589,257 +840,6 @@ components:
       - general_liability_insurance_expiration
       - category_uuids
       title: Company
-    V1CompanyUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Human-readable Company name.
-        email:
-          type:
-          - string
-          - 'null'
-          description: Email address for this Company.
-        license_id:
-          type:
-          - string
-          - 'null'
-          description: License Number, such as a contractor or trade license number.
-        address_1:
-          type:
-          - string
-          - 'null'
-          description: 'Address - Line 1. Example: `123 N Main Street`'
-        address_2:
-          type:
-          - string
-          - 'null'
-          description: Address - Line 2.
-        city:
-          type:
-          - string
-          - 'null'
-          description: Municipality where this Company is located.
-        region:
-          type:
-          - string
-          - 'null'
-          description: State, province, or region where this Company is located.
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: Zip code, postal code, or similar where this Company is located.
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country where this Company is located.
-        phone:
-          type:
-          - string
-          - 'null'
-          description: Phone Number
-        website:
-          type:
-          - string
-          - 'null'
-          description: URL
-        notes:
-          type:
-          - string
-          - 'null'
-          description: Your internal notes about this Company.
-        rating:
-          type:
-          - integer
-          - 'null'
-          description: Track how many "stars" from 1 to 5 you would give this Company.
-        review:
-          type:
-          - string
-          - 'null'
-          description: Details about your past working relationship with this Company.
-        tax_id:
-          type:
-          - string
-          - 'null'
-          description: Tax Identifier, such as EIN (Federal Tax ID) that is useful when issuing 1099 Forms.
-        is_1099_eligible:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this Company is eligible to receive 1099 tax forms.
-        workers_comp_insurance:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this Company has Workers' Compensation insurance.
-        workers_comp_insurance_expiration:
-          type:
-          - string
-          - 'null'
-          description: Workers' Compensation insurance expiration date in `YYYY-MM-DD` format.
-        general_liability_insurance:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this Company has General Liability insurance.
-        general_liability_insurance_expiration:
-          type:
-          - string
-          - 'null'
-          description: General Liability insurance expiration date in `YYYY-MM-DD` format.
-        category_uuids:
-          type: array
-          description: Company Category UUIDs to assign to this Company. Submit an empty array to remove all categories.
-          items:
-            type: string
-            description: Company Category UUID assigned to this Company.
-      title: V1CompanyUpdateRequest
-    V1CompanyCreateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Human-readable Company name.
-        email:
-          type:
-          - string
-          - 'null'
-          description: Email address for this Company.
-        license_id:
-          type:
-          - string
-          - 'null'
-          description: License Number, such as a contractor or trade license number.
-        address_1:
-          type:
-          - string
-          - 'null'
-          description: 'Address - Line 1. Example: `123 N Main Street`'
-        address_2:
-          type:
-          - string
-          - 'null'
-          description: Address - Line 2.
-        city:
-          type:
-          - string
-          - 'null'
-          description: Municipality where this Company is located.
-        region:
-          type:
-          - string
-          - 'null'
-          description: State, province, or region where this Company is located.
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: Zip code, postal code, or similar where this Company is located.
-        country:
-          type:
-          - string
-          - 'null'
-          description: Country where this Company is located.
-        phone:
-          type:
-          - string
-          - 'null'
-          description: Phone Number
-        website:
-          type:
-          - string
-          - 'null'
-          description: URL
-        notes:
-          type:
-          - string
-          - 'null'
-          description: Your internal notes about this Company.
-        rating:
-          type:
-          - integer
-          - 'null'
-          description: Track how many "stars" from 1 to 5 you would give this Company.
-        review:
-          type:
-          - string
-          - 'null'
-          description: Details about your past working relationship with this Company.
-        tax_id:
-          type:
-          - string
-          - 'null'
-          description: Tax Identifier, such as EIN (Federal Tax ID) that is useful when issuing 1099 Forms.
-        is_1099_eligible:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this Company is eligible to receive 1099 tax forms.
-        workers_comp_insurance:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this Company has Workers' Compensation insurance.
-        workers_comp_insurance_expiration:
-          type:
-          - string
-          - 'null'
-          description: Workers' Compensation insurance expiration date in `YYYY-MM-DD` format.
-        general_liability_insurance:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this Company has General Liability insurance.
-        general_liability_insurance_expiration:
-          type:
-          - string
-          - 'null'
-          description: General Liability insurance expiration date in `YYYY-MM-DD` format.
-        category_uuids:
-          type: array
-          description: Company Category UUIDs to assign to this Company.
-          items:
-            type: string
-            description: Company Category UUID assigned to this Company.
-      required:
-      - name
-      title: V1CompanyCreateRequest
-  responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
   securitySchemes:
     PublicApiBearerAuth:
       type: http

@@ -621,69 +621,61 @@ components:
       - total_tax
       - expenses
       title: Create Expense Transaction Request
-    Update_Expense_Transaction_Request:
+    Expense_Transaction:
       type: object
       properties:
+        uuid:
+          type: string
+          description: Public identifier.
+        created_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp when Expense Transaction was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp when Expense Transaction was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2026-06-07T16:20:00.123456Z`'
+        sequence_number:
+          type:
+          - integer
+          - 'null'
+          description: Project-scoped sequence number shown in the web app as `T#`.
         receipt_uuid:
           type:
           - string
           - 'null'
-          description: Receipt UUID to associate with the created Expense Transaction and every created Expense line item. Only 1 Receipt can be associated on an Expense Transaction, and a Receipt cannot be associated to more than one Expense Transaction. Send `null` to unlink (disassociate) the Transaction's current Receipt.
+          description: Receipt UUID associated with this Expense Transaction.
+        subtotal:
+          type: number
+          description: Sum of Expense amounts before tax, in dollars. Such as `1234.56`
         total_tax:
           type: number
-          description: Total tax charged for the entire Expense Transaction. Such as `1234.56`. When omitted, FlipperForce preserves the Transaction's current total tax and redistributes it across all Expense line items after submitted changes are applied.
+          description: Sum of tax values from all Expenses, in dollars. Such as `1234.56`
+        grand_total:
+          type: number
+          description: Sum of Expense totals including tax, in dollars. Such as `1234.56`
         expenses:
           type: array
-          description: Expense line items to update or create. When omitted all existing Expenses are kept as-is. They are not deleted.
+          description: Expense line items belonging to this Expense Transaction.
           items:
-            type: object
-            description: Expense line item.
-            properties:
-              uuid:
-                type: string
-                description: Expense UUID of the existing Expense to update. If you omit this field, a new Expense record will be created with this data.
-              date:
-                type: string
-                description: Required. Date this Expense was incurred in `YYYY-MM-DD` format.
-              invoice_number:
-                type:
-                - string
-                - 'null'
-                description: Invoice number entered for this Expense.
-              expense_account_uuid:
-                type:
-                - string
-                - 'null'
-                description: Expense Account UUID assigned to this Expense. This Expense Account must be in your Workspace.
-              company_uuid:
-                type:
-                - string
-                - 'null'
-                description: Company/vendor UUID assigned to this Expense. This Company must be in your Workspace.
-              expense_category_uuid:
-                type:
-                - string
-                - 'null'
-                description: Expense Category UUID assigned to this Expense. This Expense Category must be in the same Project as the Expense Transaction.
-              name:
-                type: string
-                description: Description of the purchased item or service.
-              class:
-                type:
-                - string
-                - 'null'
-                description: Expense classification.
-              amount:
-                type: number
-                description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
-            required:
-            - date
-            - name
-            - amount
-            additionalProperties: {}
+            $ref: '#/components/schemas/Expense_Line_Item'
       required:
+      - uuid
+      - created_at
+      - updated_at
+      - sequence_number
+      - receipt_uuid
+      - subtotal
+      - total_tax
+      - grand_total
       - expenses
-      title: Update Expense Transaction Request
+      title: Expense Transaction
     Expense_Line_Item:
       type: object
       properties:
@@ -797,61 +789,69 @@ components:
       - company
       - expense_category
       title: Expense Line Item
-    Expense_Transaction:
+    Update_Expense_Transaction_Request:
       type: object
       properties:
-        uuid:
-          type: string
-          description: Public identifier.
-        created_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp when Expense Transaction was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2026-06-07T16:20:00.123456Z`'
-        updated_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp when Expense Transaction was last changed in ISO 8601 Zulu format with microseconds.
-
-            Example: `2026-06-07T16:20:00.123456Z`'
-        sequence_number:
-          type:
-          - integer
-          - 'null'
-          description: Project-scoped sequence number shown in the web app as `T#`.
         receipt_uuid:
           type:
           - string
           - 'null'
-          description: Receipt UUID associated with this Expense Transaction.
-        subtotal:
-          type: number
-          description: Sum of Expense amounts before tax, in dollars. Such as `1234.56`
+          description: Receipt UUID to associate with the created Expense Transaction and every created Expense line item. Only 1 Receipt can be associated on an Expense Transaction, and a Receipt cannot be associated to more than one Expense Transaction. Send `null` to unlink (disassociate) the Transaction's current Receipt.
         total_tax:
           type: number
-          description: Sum of tax values from all Expenses, in dollars. Such as `1234.56`
-        grand_total:
-          type: number
-          description: Sum of Expense totals including tax, in dollars. Such as `1234.56`
+          description: Total tax charged for the entire Expense Transaction. Such as `1234.56`. When omitted, FlipperForce preserves the Transaction's current total tax and redistributes it across all Expense line items after submitted changes are applied.
         expenses:
           type: array
-          description: Expense line items belonging to this Expense Transaction.
+          description: Expense line items to update or create. When omitted all existing Expenses are kept as-is. They are not deleted.
           items:
-            $ref: '#/components/schemas/Expense_Line_Item'
+            type: object
+            description: Expense line item.
+            properties:
+              uuid:
+                type: string
+                description: Expense UUID of the existing Expense to update. If you omit this field, a new Expense record will be created with this data.
+              date:
+                type: string
+                description: Required. Date this Expense was incurred in `YYYY-MM-DD` format.
+              invoice_number:
+                type:
+                - string
+                - 'null'
+                description: Invoice number entered for this Expense.
+              expense_account_uuid:
+                type:
+                - string
+                - 'null'
+                description: Expense Account UUID assigned to this Expense. This Expense Account must be in your Workspace.
+              company_uuid:
+                type:
+                - string
+                - 'null'
+                description: Company/vendor UUID assigned to this Expense. This Company must be in your Workspace.
+              expense_category_uuid:
+                type:
+                - string
+                - 'null'
+                description: Expense Category UUID assigned to this Expense. This Expense Category must be in the same Project as the Expense Transaction.
+              name:
+                type: string
+                description: Description of the purchased item or service.
+              class:
+                type:
+                - string
+                - 'null'
+                description: Expense classification.
+              amount:
+                type: number
+                description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
+            required:
+            - date
+            - name
+            - amount
+            additionalProperties: {}
       required:
-      - uuid
-      - created_at
-      - updated_at
-      - sequence_number
-      - receipt_uuid
-      - subtotal
-      - total_tax
-      - grand_total
       - expenses
-      title: Expense Transaction
+      title: Update Expense Transaction Request
   responses:
     AuthenticationException:
       description: Unauthenticated

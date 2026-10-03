@@ -621,29 +621,6 @@ components:
       - totals
       - income
       title: Income List
-    Update_Income_Request:
-      type: object
-      properties:
-        date:
-          type: string
-          description: Date this income was received in `YYYY-MM-DD` format.
-        description:
-          type: string
-          description: User-facing description shown in the Income Tracker table.
-        type:
-          type:
-          - string
-          - 'null'
-          description: Income classification. Allowed values are `rental`, `resale`, and `other`.
-          enum:
-          - rental
-          - resale
-          - other
-          - null
-        amount:
-          type: number
-          description: Income amount in dollars. Such as `1234.56`.
-      title: Update Income Request
     Create_Income_Request:
       type: object
       properties:
@@ -718,19 +695,30 @@ components:
       - type
       - amount
       title: Income
+    Update_Income_Request:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date this income was received in `YYYY-MM-DD` format.
+        description:
+          type: string
+          description: User-facing description shown in the Income Tracker table.
+        type:
+          type:
+          - string
+          - 'null'
+          description: Income classification. Allowed values are `rental`, `resale`, and `other`.
+          enum:
+          - rental
+          - resale
+          - other
+          - null
+        amount:
+          type: number
+          description: Income amount in dollars. Such as `1234.56`.
+      title: Update Income Request
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -751,6 +739,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

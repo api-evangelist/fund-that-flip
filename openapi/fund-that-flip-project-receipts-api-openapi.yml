@@ -450,47 +450,66 @@ paths:
                     - null
 components:
   schemas:
-    Receipt:
+    V1DocumentsReceiptUpdateRequest:
       type: object
       properties:
-        uuid:
+        name:
           type: string
-          description: Public identifier
-        created_at:
-          type: string
-          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
+          description: '(Optional) Short description of the file, such as its filename or
 
-            Example: `2025-04-30T21:21:10.123456Z`'
+            describing what items were purchased. Available in response as
+
+            `file.name`'
         issue_date:
           type:
           - string
           - 'null'
-          description: 'Date when the vendor issued the Receipt. Such as when it was
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
 
-            printed at the vendor''s point of sale. Date string formatted as
+            the date printed on the Receipt given at the point of sale.
 
-            YYYY-MM-DD such as `2025-07-23`.'
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
         notes:
           type:
           - string
           - 'null'
-          description: Any additional details about this Receipt
-        from_client:
+          description: (Optional) Details not captured in other fields.
+      title: V1DocumentsReceiptUpdateRequest
+    V1DocumentsReceiptCreateRequest:
+      type: object
+      properties:
+        intent_uuid:
           type: string
-          description: 'Details on where this Receipt originated, such as the web application,
+          description: '[Upload Intent](/operations/v1.workspace.upload-intent.create) UUID for the successfully uploaded Receipt file.'
+        name:
+          type:
+          - string
+          - 'null'
+          description: '(Optional) Short description of the file, such as its filename or
 
-            mobile application, or external integration.'
-        file:
-          description: Receipt file
-          $ref: '#/components/schemas/File'
+            describing what items were purchased. Available in response as
+
+            `file.name`'
+          maxLength: 191
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+
+            the date printed on the Receipt given at the point of sale.
+
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Details not captured in other fields.
+          maxLength: 10000
       required:
-      - uuid
-      - created_at
-      - issue_date
-      - notes
-      - from_client
-      - file
-      title: Receipt
+      - intent_uuid
+      title: V1DocumentsReceiptCreateRequest
     File:
       type: object
       properties:
@@ -552,79 +571,48 @@ components:
       - source_url
       - preview_url
       title: File
-    V1DocumentsReceiptCreateRequest:
+    Receipt:
       type: object
       properties:
-        intent_uuid:
+        uuid:
           type: string
-          description: '[Upload Intent](/operations/v1.workspace.upload-intent.create) UUID for the successfully uploaded Receipt file.'
-        name:
-          type:
-          - string
-          - 'null'
-          description: '(Optional) Short description of the file, such as its filename or
+          description: Public identifier
+        created_at:
+          type: string
+          description: 'Timestamp when Receipt was created in ISO 8601 Zulu format with microseconds.
 
-            describing what items were purchased. Available in response as
-
-            `file.name`'
-          maxLength: 191
+            Example: `2025-04-30T21:21:10.123456Z`'
         issue_date:
           type:
           - string
           - 'null'
-          format: date
-          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+          description: 'Date when the vendor issued the Receipt. Such as when it was
 
-            the date printed on the Receipt given at the point of sale.
+            printed at the vendor''s point of sale. Date string formatted as
 
-            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+            YYYY-MM-DD such as `2025-07-23`.'
         notes:
           type:
           - string
           - 'null'
-          description: (Optional) Details not captured in other fields.
-          maxLength: 10000
+          description: Any additional details about this Receipt
+        from_client:
+          type: string
+          description: 'Details on where this Receipt originated, such as the web application,
+
+            mobile application, or external integration.'
+        file:
+          description: Receipt file
+          $ref: '#/components/schemas/File'
       required:
-      - intent_uuid
-      title: V1DocumentsReceiptCreateRequest
-    V1DocumentsReceiptUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: '(Optional) Short description of the file, such as its filename or
-
-            describing what items were purchased. Available in response as
-
-            `file.name`'
-        issue_date:
-          type:
-          - string
-          - 'null'
-          description: '(Optional) Date the Receipt was provided by the vendor. Such as
-
-            the date printed on the Receipt given at the point of sale.
-
-            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Details not captured in other fields.
-      title: V1DocumentsReceiptUpdateRequest
+      - uuid
+      - created_at
+      - issue_date
+      - notes
+      - from_client
+      - file
+      title: Receipt
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -645,6 +633,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

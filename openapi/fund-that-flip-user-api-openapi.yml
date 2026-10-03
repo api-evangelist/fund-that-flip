@@ -51,21 +51,44 @@ paths:
         '401':
           $ref: '#/components/responses/AuthenticationException'
 components:
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   schemas:
-    User_Account:
+    User:
       type: object
       properties:
-        user:
-          $ref: '#/components/schemas/User'
-        workspaces:
-          type: array
-          description: Each Workspace the User is a member of
-          items:
-            $ref: '#/components/schemas/Workspace'
+        uuid:
+          type: string
+          description: Public identifier
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type:
+          - string
+          - 'null'
+          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
       required:
-      - user
-      - workspaces
-      title: User Account
+      - uuid
+      - first_name
+      - last_name
+      - email
+      - avatar
+      title: User
     Workspace:
       type: object
       properties:
@@ -156,43 +179,20 @@ components:
       - user_permissions
       - project_stages
       title: Workspace
-    User:
+    User_Account:
       type: object
       properties:
-        uuid:
-          type: string
-          description: Public identifier
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-        avatar:
-          type:
-          - string
-          - 'null'
-          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
+        user:
+          $ref: '#/components/schemas/User'
+        workspaces:
+          type: array
+          description: Each Workspace the User is a member of
+          items:
+            $ref: '#/components/schemas/Workspace'
       required:
-      - uuid
-      - first_name
-      - last_name
-      - email
-      - avatar
-      title: User
-  responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
+      - user
+      - workspaces
+      title: User Account
   securitySchemes:
     PublicApiBearerAuth:
       type: http

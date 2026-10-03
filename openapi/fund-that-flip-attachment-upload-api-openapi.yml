@@ -233,7 +233,50 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
+  responses:
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
   schemas:
+    AttachmentUploadIntentType:
+      type: string
+      description: 'Metadata for AttachmentUploadIntent to denote which type of file the intent was created for.
+
+        '
+      enum:
+      - photo-log-photo
+      - project-update-photo
+      - receipt
+      title: AttachmentUploadIntentType
     Upload_Intent:
       type: object
       properties:
@@ -273,49 +316,6 @@ components:
       - method
       - headers
       title: Upload Intent
-    AttachmentUploadIntentType:
-      type: string
-      description: 'Metadata for AttachmentUploadIntent to denote which type of file the intent was created for.
-
-        '
-      enum:
-      - photo-log-photo
-      - project-update-photo
-      - receipt
-      title: AttachmentUploadIntentType
-  responses:
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

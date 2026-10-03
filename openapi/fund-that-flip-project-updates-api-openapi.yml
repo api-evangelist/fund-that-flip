@@ -441,6 +441,30 @@ components:
       - order
       - photo
       title: 'Project Update: Photo'
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type:
+          - string
+          - 'null'
+          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
+      required:
+      - uuid
+      - first_name
+      - last_name
+      - email
+      - avatar
+      title: User
     Project_Update:
       type: object
       properties:
@@ -556,30 +580,6 @@ components:
       - source_url
       - preview_url
       title: File
-    User:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-        avatar:
-          type:
-          - string
-          - 'null'
-          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
-      required:
-      - uuid
-      - first_name
-      - last_name
-      - email
-      - avatar
-      title: User
     V1ProjectProgressUpdateRequest:
       type: object
       properties:
@@ -627,18 +627,6 @@ components:
       - posted_at
       title: V1ProjectProgressUpdateRequest
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -659,6 +647,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http

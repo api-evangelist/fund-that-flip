@@ -354,15 +354,6 @@ paths:
                     - null
 components:
   schemas:
-    V1CompanyCategoryCreateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Human-readable category name used to group Companies.
-      required:
-      - name
-      title: V1CompanyCategoryCreateRequest
     Company_Category:
       type: object
       properties:
@@ -388,6 +379,15 @@ components:
       - updated_at
       - name
       title: Company Category
+    V1CompanyCategoryCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable category name used to group Companies.
+      required:
+      - name
+      title: V1CompanyCategoryCreateRequest
     V1CompanyCategoryUpdateRequest:
       type: object
       properties:
@@ -396,18 +396,6 @@ components:
           description: Human-readable category name used to group Companies.
       title: V1CompanyCategoryUpdateRequest
   responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
     ValidationException:
       description: Validation error
       content:
@@ -428,6 +416,18 @@ components:
             required:
             - message
             - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   securitySchemes:
     PublicApiBearerAuth:
       type: http
