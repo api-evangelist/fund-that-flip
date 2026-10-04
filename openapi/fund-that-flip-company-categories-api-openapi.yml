@@ -353,48 +353,6 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
-  schemas:
-    Company_Category:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        created_at:
-          type: string
-          description: 'Timestamp when record was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        updated_at:
-          type: string
-          description: 'Timestamp when record was last changed in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        name:
-          type: string
-          description: Human-readable category name used to group Companies.
-      required:
-      - uuid
-      - created_at
-      - updated_at
-      - name
-      title: Company Category
-    V1CompanyCategoryCreateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Human-readable category name used to group Companies.
-      required:
-      - name
-      title: V1CompanyCategoryCreateRequest
-    V1CompanyCategoryUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Human-readable category name used to group Companies.
-      title: V1CompanyCategoryUpdateRequest
   responses:
     ValidationException:
       description: Validation error
@@ -428,6 +386,48 @@ components:
                 description: Error overview.
             required:
             - message
+  schemas:
+    V1CompanyCategoryUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable category name used to group Companies.
+      title: V1CompanyCategoryUpdateRequest
+    V1CompanyCategoryCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable category name used to group Companies.
+      required:
+      - name
+      title: V1CompanyCategoryCreateRequest
+    Company_Category:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        created_at:
+          type: string
+          description: 'Timestamp when record was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        updated_at:
+          type: string
+          description: 'Timestamp when record was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        name:
+          type: string
+          description: Human-readable category name used to group Companies.
+      required:
+      - uuid
+      - created_at
+      - updated_at
+      - name
+      title: Company Category
   securitySchemes:
     PublicApiBearerAuth:
       type: http

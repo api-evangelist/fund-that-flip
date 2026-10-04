@@ -89,6 +89,20 @@ components:
       - email
       - avatar
       title: User
+    User_Account:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        workspaces:
+          type: array
+          description: Each Workspace the User is a member of
+          items:
+            $ref: '#/components/schemas/Workspace'
+      required:
+      - user
+      - workspaces
+      title: User Account
     Workspace:
       type: object
       properties:
@@ -179,20 +193,6 @@ components:
       - user_permissions
       - project_stages
       title: Workspace
-    User_Account:
-      type: object
-      properties:
-        user:
-          $ref: '#/components/schemas/User'
-        workspaces:
-          type: array
-          description: Each Workspace the User is a member of
-          items:
-            $ref: '#/components/schemas/Workspace'
-      required:
-      - user
-      - workspaces
-      title: User Account
   securitySchemes:
     PublicApiBearerAuth:
       type: http

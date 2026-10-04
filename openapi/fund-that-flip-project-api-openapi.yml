@@ -342,226 +342,40 @@ paths:
                     - WORKSPACE_SELECTION_MISSING
                     - null
 components:
+  responses:
+    ValidationException:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Errors overview.
+              errors:
+                type: object
+                description: A detailed description of each field that failed validation.
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+            required:
+            - message
+            - errors
+    AuthenticationException:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error overview.
+            required:
+            - message
   schemas:
-    Project:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public Identifier
-        workspace_uuid:
-          type: string
-          description: Workspace Public Identifier
-        created_at:
-          type: string
-          description: 'Timestamp when Project was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        updated_at:
-          type: string
-          description: 'Timestamp when Project was last changed in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        name:
-          type: string
-          description: 'Short description to distinguish one Project from another.
-
-            Most Projects use an abbreviated Address.'
-        full_address:
-          type: string
-          description: All address parts assembled into a single string
-        address_1:
-          type:
-          - string
-          - 'null'
-          description: 'Address Line 1. Example: `123 N Main Street`'
-        address_2:
-          type:
-          - string
-          - 'null'
-          description: Address Line 2
-        city:
-          type:
-          - string
-          - 'null'
-          description: 'Municipality where Project is located.
-
-            Example: `Kansas City`'
-        state:
-          type:
-          - string
-          - 'null'
-          description: '2-letter US State abbreviation where Project is located.
-
-            Example: `MO` for Missouri'
-        postal_code:
-          type:
-          - string
-          - 'null'
-          description: 'Zip code or similar where Project is located.
-
-            Example: `64151`'
-        country:
-          type:
-          - string
-          - 'null'
-          description: Address - Country is the 2-character country code.
-        lat:
-          type:
-          - number
-          - 'null'
-          description: 'GPS Latitude of this Project''s physical location. Such as
-
-            `39.048926`. NULL if the Project Address cannot be found by our
-
-            GPS coordinate data provider.'
-        lng:
-          type:
-          - number
-          - 'null'
-          description: 'GPS Longitude of this Project''s physical location. Such as
-
-            `-94.484024`. NULL if the Project Address cannot be found by our
-
-            GPS coordinate data provider.'
-        investment_strategy:
-          type: string
-          description: 'Investment Strategy is the real estate strategy being
-
-            used to generate a profit, such as a flip, rental, or
-
-            wholesale. Defaults to Fix and Flip if no value is submitted.
-
-
-            Only supports the following values:
-
-
-            **Flip:**
-
-
-            * `fix_and_flip` - Fix and Flip
-
-            * `wholesale` - Wholesale
-
-            * `wholetail` - Wholetail
-
-
-            **New Construction:**
-
-
-            * `build_to_rent` - Build to Rent
-
-            * `new_construction` - Build to Sell
-
-
-            **Rental:**
-
-
-            * `brrrr` - BRRRR
-
-            * `buy_and_hold` - Buy and Hold
-
-            * `rental` - Rental
-
-            * `short_term_rental` - Short Term Rental
-
-
-            **Other:**
-
-
-            * `other` - Other'
-        stage:
-          type: string
-          description: 'Current Stage. These are the "keys" from the [User Account API](/operations/v1.user.account)
-
-            and [Workspace Schema](/schemas/Workspace) field `project_stages`.'
-        type:
-          type: string
-          description: 'Property Type describes the kind of structure.
-
-            Such as Single Family, Duplex, Quadplex, Apartment Building, etc.'
-        style:
-          type: string
-          description: Property Style such as Ranch, Split Level, Two-Story, Three-Story, Condo, etc.
-        square_feet:
-          type: integer
-          description: Structure's finished square feet.
-        beds:
-          description: 'Number of Bedrooms. Can be an integer like `3` or a decimal like
-
-            `3.5`.'
-          anyOf:
-          - type: integer
-          - type: number
-          - type: 'null'
-        baths:
-          description: 'Number of Bathrooms. Can be an integer like `3` or a decimal like
-
-            `3.5`.'
-          anyOf:
-          - type: integer
-          - type: number
-          - type: 'null'
-        year_built:
-          type: string
-          description: Year when the current structure was built on the land.
-        featured_image_url:
-          type: string
-          description: Absolute URL to Project photo
-        permissions:
-          type: array
-          description: 'Software Features the User is granted on this Project according to
-
-            the Workspace''s Subscription Plan, and how the User''s account is
-
-            configured in the Workspace. Please contact us for a complete
-
-            list and what they mean.'
-          items:
-            type: string
-      required:
-      - uuid
-      - workspace_uuid
-      - created_at
-      - updated_at
-      - name
-      - full_address
-      - address_1
-      - address_2
-      - city
-      - state
-      - postal_code
-      - country
-      - lat
-      - lng
-      - investment_strategy
-      - stage
-      - type
-      - style
-      - square_feet
-      - beds
-      - baths
-      - year_built
-      - featured_image_url
-      - permissions
-      title: Project
-    ProjectStrategy:
-      type: string
-      description: 'Project Investment Strategy.
-
-        '
-      enum:
-      - brrrr
-      - build_to_rent
-      - buy_and_hold
-      - fix_and_flip
-      - new_construction
-      - other
-      - rental
-      - short_term_rental
-      - wholesale
-      - wholetail
-      title: ProjectStrategy
     V1ProjectCreateRequest:
       type: object
       properties:
@@ -721,28 +535,6 @@ components:
       - state
       - postal_code
       title: V1ProjectCreateRequest
-    ProjectPipelineStage:
-      type: string
-      description: 'Project Pipeline Stage controls which phase of the Project Workflow a Project is in. Projects start as leads, then track renovation and construction, and finally being sold or retained for a portfolio.
-
-        '
-      enum:
-      - lead
-      - contacting_seller
-      - appointment_set
-      - offer_made
-      - negotiation
-      - pending_purchase
-      - construction_on_hold
-      - planning_permitting
-      - under_construction
-      - punch_list
-      - active_listing
-      - pending_sale
-      - completed_portfolio
-      - rental_inventory
-      - wholesale_inventory
-      title: ProjectPipelineStage
     V1ProjectUpdateRequest:
       type: object
       properties:
@@ -992,39 +784,247 @@ components:
           minimum: 0
           maximum: 999
       title: V1ProjectUpdateRequest
-  responses:
-    AuthenticationException:
-      description: Unauthenticated
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error overview.
-            required:
-            - message
-    ValidationException:
-      description: Validation error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Errors overview.
-              errors:
-                type: object
-                description: A detailed description of each field that failed validation.
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-            required:
-            - message
-            - errors
+    Project:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public Identifier
+        workspace_uuid:
+          type: string
+          description: Workspace Public Identifier
+        created_at:
+          type: string
+          description: 'Timestamp when Project was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        updated_at:
+          type: string
+          description: 'Timestamp when Project was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        name:
+          type: string
+          description: 'Short description to distinguish one Project from another.
+
+            Most Projects use an abbreviated Address.'
+        full_address:
+          type: string
+          description: All address parts assembled into a single string
+        address_1:
+          type:
+          - string
+          - 'null'
+          description: 'Address Line 1. Example: `123 N Main Street`'
+        address_2:
+          type:
+          - string
+          - 'null'
+          description: Address Line 2
+        city:
+          type:
+          - string
+          - 'null'
+          description: 'Municipality where Project is located.
+
+            Example: `Kansas City`'
+        state:
+          type:
+          - string
+          - 'null'
+          description: '2-letter US State abbreviation where Project is located.
+
+            Example: `MO` for Missouri'
+        postal_code:
+          type:
+          - string
+          - 'null'
+          description: 'Zip code or similar where Project is located.
+
+            Example: `64151`'
+        country:
+          type:
+          - string
+          - 'null'
+          description: Address - Country is the 2-character country code.
+        lat:
+          type:
+          - number
+          - 'null'
+          description: 'GPS Latitude of this Project''s physical location. Such as
+
+            `39.048926`. NULL if the Project Address cannot be found by our
+
+            GPS coordinate data provider.'
+        lng:
+          type:
+          - number
+          - 'null'
+          description: 'GPS Longitude of this Project''s physical location. Such as
+
+            `-94.484024`. NULL if the Project Address cannot be found by our
+
+            GPS coordinate data provider.'
+        investment_strategy:
+          type: string
+          description: 'Investment Strategy is the real estate strategy being
+
+            used to generate a profit, such as a flip, rental, or
+
+            wholesale. Defaults to Fix and Flip if no value is submitted.
+
+
+            Only supports the following values:
+
+
+            **Flip:**
+
+
+            * `fix_and_flip` - Fix and Flip
+
+            * `wholesale` - Wholesale
+
+            * `wholetail` - Wholetail
+
+
+            **New Construction:**
+
+
+            * `build_to_rent` - Build to Rent
+
+            * `new_construction` - Build to Sell
+
+
+            **Rental:**
+
+
+            * `brrrr` - BRRRR
+
+            * `buy_and_hold` - Buy and Hold
+
+            * `rental` - Rental
+
+            * `short_term_rental` - Short Term Rental
+
+
+            **Other:**
+
+
+            * `other` - Other'
+        stage:
+          type: string
+          description: 'Current Stage. These are the "keys" from the [User Account API](/operations/v1.user.account)
+
+            and [Workspace Schema](/schemas/Workspace) field `project_stages`.'
+        type:
+          type: string
+          description: 'Property Type describes the kind of structure.
+
+            Such as Single Family, Duplex, Quadplex, Apartment Building, etc.'
+        style:
+          type: string
+          description: Property Style such as Ranch, Split Level, Two-Story, Three-Story, Condo, etc.
+        square_feet:
+          type: integer
+          description: Structure's finished square feet.
+        beds:
+          description: 'Number of Bedrooms. Can be an integer like `3` or a decimal like
+
+            `3.5`.'
+          anyOf:
+          - type: integer
+          - type: number
+          - type: 'null'
+        baths:
+          description: 'Number of Bathrooms. Can be an integer like `3` or a decimal like
+
+            `3.5`.'
+          anyOf:
+          - type: integer
+          - type: number
+          - type: 'null'
+        year_built:
+          type: string
+          description: Year when the current structure was built on the land.
+        featured_image_url:
+          type: string
+          description: Absolute URL to Project photo
+        permissions:
+          type: array
+          description: 'Software Features the User is granted on this Project according to
+
+            the Workspace''s Subscription Plan, and how the User''s account is
+
+            configured in the Workspace. Please contact us for a complete
+
+            list and what they mean.'
+          items:
+            type: string
+      required:
+      - uuid
+      - workspace_uuid
+      - created_at
+      - updated_at
+      - name
+      - full_address
+      - address_1
+      - address_2
+      - city
+      - state
+      - postal_code
+      - country
+      - lat
+      - lng
+      - investment_strategy
+      - stage
+      - type
+      - style
+      - square_feet
+      - beds
+      - baths
+      - year_built
+      - featured_image_url
+      - permissions
+      title: Project
+    ProjectStrategy:
+      type: string
+      description: 'Project Investment Strategy.
+
+        '
+      enum:
+      - brrrr
+      - build_to_rent
+      - buy_and_hold
+      - fix_and_flip
+      - new_construction
+      - other
+      - rental
+      - short_term_rental
+      - wholesale
+      - wholetail
+      title: ProjectStrategy
+    ProjectPipelineStage:
+      type: string
+      description: 'Project Pipeline Stage controls which phase of the Project Workflow a Project is in. Projects start as leads, then track renovation and construction, and finally being sold or retained for a portfolio.
+
+        '
+      enum:
+      - lead
+      - contacting_seller
+      - appointment_set
+      - offer_made
+      - negotiation
+      - pending_purchase
+      - construction_on_hold
+      - planning_permitting
+      - under_construction
+      - punch_list
+      - active_listing
+      - pending_sale
+      - completed_portfolio
+      - rental_inventory
+      - wholesale_inventory
+      title: ProjectPipelineStage
   securitySchemes:
     PublicApiBearerAuth:
       type: http

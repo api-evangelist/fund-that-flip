@@ -418,107 +418,6 @@ paths:
                     - null
 components:
   schemas:
-    Project_Update__Photo:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier
-        order:
-          type: integer
-          description: 'Order number for displaying this photo relative to others.
-
-            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
-
-            A Photo with `order` of `5` should display before another Photo
-
-            with `order` of `10`.'
-        photo:
-          description: Photo details
-          $ref: '#/components/schemas/File'
-      required:
-      - uuid
-      - order
-      - photo
-      title: 'Project Update: Photo'
-    User:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-        avatar:
-          type:
-          - string
-          - 'null'
-          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
-      required:
-      - uuid
-      - first_name
-      - last_name
-      - email
-      - avatar
-      title: User
-    Project_Update:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Public identifier
-        created_at:
-          type: string
-          description: 'Timestamp when record was created in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        updated_at:
-          type: string
-          description: 'Timestamp when record was last changed in ISO 8601 Zulu format with microseconds.
-
-            Example: `2025-04-30T21:21:10.123456Z`'
-        posted_at:
-          type:
-          - string
-          - 'null'
-          description: 'Timestamp that orders the Update relative to other Updates.
-
-            Timestamps in the future should still be displayed.
-
-            Example: `2025-04-30T21:21:10Z`'
-        title:
-          type:
-          - string
-          - 'null'
-          description: 'Sentence summarizing the contents of the update. Can be NULL if
-
-            the Update was created without a title.'
-        description:
-          type: string
-          description: 'Long description with full details. Rich text supported with
-
-            markup in HTML.'
-        author:
-          description: User who posted the Update
-          $ref: '#/components/schemas/User'
-        photos:
-          type: array
-          items:
-            $ref: '#/components/schemas/Project_Update__Photo'
-      required:
-      - uuid
-      - created_at
-      - updated_at
-      - posted_at
-      - title
-      - description
-      - author
-      - photos
-      title: Project Update
     File:
       type: object
       properties:
@@ -580,6 +479,60 @@ components:
       - source_url
       - preview_url
       title: File
+    Project_Update:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        created_at:
+          type: string
+          description: 'Timestamp when record was created in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        updated_at:
+          type: string
+          description: 'Timestamp when record was last changed in ISO 8601 Zulu format with microseconds.
+
+            Example: `2025-04-30T21:21:10.123456Z`'
+        posted_at:
+          type:
+          - string
+          - 'null'
+          description: 'Timestamp that orders the Update relative to other Updates.
+
+            Timestamps in the future should still be displayed.
+
+            Example: `2025-04-30T21:21:10Z`'
+        title:
+          type:
+          - string
+          - 'null'
+          description: 'Sentence summarizing the contents of the update. Can be NULL if
+
+            the Update was created without a title.'
+        description:
+          type: string
+          description: 'Long description with full details. Rich text supported with
+
+            markup in HTML.'
+        author:
+          description: User who posted the Update
+          $ref: '#/components/schemas/User'
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project_Update__Photo'
+      required:
+      - uuid
+      - created_at
+      - updated_at
+      - posted_at
+      - title
+      - description
+      - author
+      - photos
+      title: Project Update
     V1ProjectProgressUpdateRequest:
       type: object
       properties:
@@ -626,6 +579,53 @@ components:
       - description
       - posted_at
       title: V1ProjectProgressUpdateRequest
+    Project_Update__Photo:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier
+        order:
+          type: integer
+          description: 'Order number for displaying this photo relative to others.
+
+            Photos are not guaranteed to have sequential ordering (i.e. 1, 2, 3, etc).
+
+            A Photo with `order` of `5` should display before another Photo
+
+            with `order` of `10`.'
+        photo:
+          description: Photo details
+          $ref: '#/components/schemas/File'
+      required:
+      - uuid
+      - order
+      - photo
+      title: 'Project Update: Photo'
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Public identifier
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        avatar:
+          type:
+          - string
+          - 'null'
+          description: URL to User's avatar photo. NULL if they have not uploaded a photo.
+      required:
+      - uuid
+      - first_name
+      - last_name
+      - email
+      - avatar
+      title: User
   responses:
     ValidationException:
       description: Validation error

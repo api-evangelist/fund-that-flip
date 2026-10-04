@@ -450,66 +450,6 @@ paths:
                     - null
 components:
   schemas:
-    V1DocumentsReceiptUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: '(Optional) Short description of the file, such as its filename or
-
-            describing what items were purchased. Available in response as
-
-            `file.name`'
-        issue_date:
-          type:
-          - string
-          - 'null'
-          description: '(Optional) Date the Receipt was provided by the vendor. Such as
-
-            the date printed on the Receipt given at the point of sale.
-
-            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Details not captured in other fields.
-      title: V1DocumentsReceiptUpdateRequest
-    V1DocumentsReceiptCreateRequest:
-      type: object
-      properties:
-        intent_uuid:
-          type: string
-          description: '[Upload Intent](/operations/v1.workspace.upload-intent.create) UUID for the successfully uploaded Receipt file.'
-        name:
-          type:
-          - string
-          - 'null'
-          description: '(Optional) Short description of the file, such as its filename or
-
-            describing what items were purchased. Available in response as
-
-            `file.name`'
-          maxLength: 191
-        issue_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: '(Optional) Date the Receipt was provided by the vendor. Such as
-
-            the date printed on the Receipt given at the point of sale.
-
-            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
-        notes:
-          type:
-          - string
-          - 'null'
-          description: (Optional) Details not captured in other fields.
-          maxLength: 10000
-      required:
-      - intent_uuid
-      title: V1DocumentsReceiptCreateRequest
     File:
       type: object
       properties:
@@ -571,6 +511,41 @@ components:
       - source_url
       - preview_url
       title: File
+    V1DocumentsReceiptCreateRequest:
+      type: object
+      properties:
+        intent_uuid:
+          type: string
+          description: '[Upload Intent](/operations/v1.workspace.upload-intent.create) UUID for the successfully uploaded Receipt file.'
+        name:
+          type:
+          - string
+          - 'null'
+          description: '(Optional) Short description of the file, such as its filename or
+
+            describing what items were purchased. Available in response as
+
+            `file.name`'
+          maxLength: 191
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+
+            the date printed on the Receipt given at the point of sale.
+
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Details not captured in other fields.
+          maxLength: 10000
+      required:
+      - intent_uuid
+      title: V1DocumentsReceiptCreateRequest
     Receipt:
       type: object
       properties:
@@ -612,6 +587,31 @@ components:
       - from_client
       - file
       title: Receipt
+    V1DocumentsReceiptUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: '(Optional) Short description of the file, such as its filename or
+
+            describing what items were purchased. Available in response as
+
+            `file.name`'
+        issue_date:
+          type:
+          - string
+          - 'null'
+          description: '(Optional) Date the Receipt was provided by the vendor. Such as
+
+            the date printed on the Receipt given at the point of sale.
+
+            Format: YYYY-MM-DD like `2025-10-18` for October 18, 2025.'
+        notes:
+          type:
+          - string
+          - 'null'
+          description: (Optional) Details not captured in other fields.
+      title: V1DocumentsReceiptUpdateRequest
   responses:
     ValidationException:
       description: Validation error

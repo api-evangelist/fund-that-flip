@@ -267,16 +267,6 @@ components:
             - message
             - errors
   schemas:
-    AttachmentUploadIntentType:
-      type: string
-      description: 'Metadata for AttachmentUploadIntent to denote which type of file the intent was created for.
-
-        '
-      enum:
-      - photo-log-photo
-      - project-update-photo
-      - receipt
-      title: AttachmentUploadIntentType
     Upload_Intent:
       type: object
       properties:
@@ -316,6 +306,16 @@ components:
       - method
       - headers
       title: Upload Intent
+    AttachmentUploadIntentType:
+      type: string
+      description: 'Metadata for AttachmentUploadIntent to denote which type of file the intent was created for.
+
+        '
+      enum:
+      - photo-log-photo
+      - project-update-photo
+      - receipt
+      title: AttachmentUploadIntentType
   securitySchemes:
     PublicApiBearerAuth:
       type: http

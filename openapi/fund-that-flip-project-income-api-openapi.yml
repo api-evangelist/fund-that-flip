@@ -601,26 +601,6 @@ paths:
                     - null
 components:
   schemas:
-    Income_List:
-      type: object
-      properties:
-        totals:
-          type: object
-          description: Sums across all Income records matching the request filters, before pagination.
-          properties:
-            amount:
-              type: number
-          required:
-          - amount
-        income:
-          type: array
-          description: Current page of Income records.
-          items:
-            $ref: '#/components/schemas/Income'
-      required:
-      - totals
-      - income
-      title: Income List
     Create_Income_Request:
       type: object
       properties:
@@ -695,6 +675,26 @@ components:
       - type
       - amount
       title: Income
+    Income_List:
+      type: object
+      properties:
+        totals:
+          type: object
+          description: Sums across all Income records matching the request filters, before pagination.
+          properties:
+            amount:
+              type: number
+          required:
+          - amount
+        income:
+          type: array
+          description: Current page of Income records.
+          items:
+            $ref: '#/components/schemas/Income'
+      required:
+      - totals
+      - income
+      title: Income List
     Update_Income_Request:
       type: object
       properties:

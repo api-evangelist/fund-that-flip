@@ -517,23 +517,6 @@ paths:
                     - null
 components:
   schemas:
-    Expense_Line_Item_Delete_Tombstone:
-      type: object
-      properties:
-        deleted_transaction_uuid:
-          type: string
-          description: UUID of the Expense Transaction deleted because its final Expense was deleted.
-        deleted_expense_uuid:
-          type: string
-          description: UUID of the final Expense deleted from the Transaction.
-        message:
-          type: string
-          description: Human-readable explanation for why the parent Expense Transaction was deleted.
-      required:
-      - deleted_transaction_uuid
-      - deleted_expense_uuid
-      - message
-      title: Expense Line Item Delete Tombstone
     Update_Expense_Line_Item_Request:
       type: object
       properties:
@@ -581,6 +564,49 @@ components:
           - 'null'
           description: Expense amount BEFORE tax, in dollars. Such as `1234.56`
       title: Update Expense Line Item Request
+    Expense_Line_Item_Delete_Tombstone:
+      type: object
+      properties:
+        deleted_transaction_uuid:
+          type: string
+          description: UUID of the Expense Transaction deleted because its final Expense was deleted.
+        deleted_expense_uuid:
+          type: string
+          description: UUID of the final Expense deleted from the Transaction.
+        message:
+          type: string
+          description: Human-readable explanation for why the parent Expense Transaction was deleted.
+      required:
+      - deleted_transaction_uuid
+      - deleted_expense_uuid
+      - message
+      title: Expense Line Item Delete Tombstone
+    Expense_Line_Item_List:
+      type: object
+      properties:
+        totals:
+          type: object
+          description: Sums across all Expense Line Items matching the request filters, before pagination.
+          properties:
+            amount:
+              type: number
+            tax:
+              type: number
+            total:
+              type: number
+          required:
+          - amount
+          - tax
+          - total
+        expenses:
+          type: array
+          description: Current page of Expense Line Items.
+          items:
+            $ref: '#/components/schemas/Expense_Line_Item'
+      required:
+      - totals
+      - expenses
+      title: Expense Line Item List
     Expense_Transaction:
       type: object
       properties:
@@ -749,32 +775,6 @@ components:
       - company
       - expense_category
       title: Expense Line Item
-    Expense_Line_Item_List:
-      type: object
-      properties:
-        totals:
-          type: object
-          description: Sums across all Expense Line Items matching the request filters, before pagination.
-          properties:
-            amount:
-              type: number
-            tax:
-              type: number
-            total:
-              type: number
-          required:
-          - amount
-          - tax
-          - total
-        expenses:
-          type: array
-          description: Current page of Expense Line Items.
-          items:
-            $ref: '#/components/schemas/Expense_Line_Item'
-      required:
-      - totals
-      - expenses
-      title: Expense Line Item List
   responses:
     ValidationException:
       description: Validation error
