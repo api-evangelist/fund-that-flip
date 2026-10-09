@@ -115,3 +115,53 @@ payment_methods:
 - American Express
 - Discover
 refund_policy: Monthly plans cancel at the end of the cycle; annual plans carry a 30-day money-back guarantee.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: Rookie Analysis
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods: []
+  - name: Solo Analysis
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Team Analysis
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Business Analysis
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Solo
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Team
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Business
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
